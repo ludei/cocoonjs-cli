@@ -11,7 +11,6 @@ Please refer to the [Cordova requirements](https://github.com/apache/cordova-cli
 After installing Cordova in your computer, execute the following command to install the CocoonJS CLI tools:
 
 ```
-#!javascript
 $ npm install -g cocoonjs
 ```
 
@@ -20,7 +19,6 @@ $ npm install -g cocoonjs
 Use any valid cordova command with the CocoonJS-CLI to manage your project, eg:
 
 ```
-#!javascript
 $ cocoonjs create /path/ com.ludei.test LudeiTest
 $ cocoonjs platform add android
 $ cocoonjs plugin add com.ludei.webview.plus
@@ -31,18 +29,18 @@ $ cocoonjs run
 CocoonJS Cloud project managment
 There is a command reserved to handle CocoonJS cloud based projects (http://cloud.ludei.com), the command is called "cloud" and can be used as follows:
 ```
-#!javascript
 $ cocoonjs cloud
 ```
 
 This command *is still* in development and should be avoid its usage for now.
 
-## Pro tip ##
+### FAQ ###
+
+#### ¿Which version of cordova is required? ####
 The CocoonJS command line tool automatically detects the Cordova version that you've installed in your computer, however, if you use a different cordova version that you've installed locally, you can use the --cordova-path argument to tell the CocoonJS-CLI where is the cordova binary that is need to be used for the cordova commands, eg:
 
 
 ```
-#!javascript
 $ cocoonjs platform add android --cordova-path=/Users/Cocoon/cordova/cordova-3.5.0-0.2.4/
 ```
 When using the *--cordova-path* the CocoonJS-CLI will find the cordova binary inside *cordova-3.5.0-0.2.4/bin/cordova* and will use it to spawn all the cordova based commands, you can use any cordova 3.x version.
