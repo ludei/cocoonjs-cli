@@ -6,7 +6,7 @@ The CocoonJS command line tools let you build Cordova-based applications that be
 > The Webview+ provide you a consistent rendering engine independently of the Android 4.x version, so your app/game will run using the same rendering engine, with the fastest javascript engine in the world (V8).
 
 ## Requirements ##
-Please refer to the [Cordova requirements](https://github.com/apache/cordova-cli#requirements) in order to set up the requirements.
+Please refer to [Cordova prerequisites](https://github.com/apache/cordova-cli#requirements) to set up your environment.
 
 After installing Cordova in your computer, execute the following command to install the CocoonJS CLI tools:
 
