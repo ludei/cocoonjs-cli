@@ -1,0 +1,1 @@
+new (require('./src/index'))(process.argv.slice(2));

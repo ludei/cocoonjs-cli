@@ -1,0 +1,46 @@
+{
+  "name": "cocoonjs",
+  "version": "1.0.0-0.1.0",
+  "preferGlobal": "true",
+  "description": "CocoonJS command line tool",
+  "main": "cli",
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "engineStrict": true,
+  "bin": {
+    "cocoonjs": "./bin/cocoon.js"
+  },
+  "bugs": {
+    "url": "https://support.ludei.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:ludei/cocoonjs-cli.git"
+  },
+  "keywords": [
+    "ludei",
+    "cocoonjs",
+    "chromium",
+    "Webview+",
+    "browser",
+    "cordova",
+    "app",
+    "html5"
+  ],
+  "dependencies": {
+    "q": "1.0.1",
+    "shelljs": "0.3.0",
+    "minimist": "0.1.0",
+    "colors": "0.6.2",
+    "xml2js": "0.4.4"
+  },
+  "author": "Carlos Hernández Gómez - @k4rliky",
+  "contributors": [
+    {
+      "name": "Txus Ordorika",
+      "email": "txus@ludei.com"
+    }
+  ],
+  "license": "Apache version 2.0"
+}

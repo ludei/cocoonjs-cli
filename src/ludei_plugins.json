@@ -1,0 +1,5 @@
+{
+	"plugins" : [
+		{ "plugin_id" : "com.ludei.webview.plus", "bundle_id" : "com.ludei.webview.plus"}
+	]
+}
