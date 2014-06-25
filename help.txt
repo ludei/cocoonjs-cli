@@ -37,12 +37,11 @@ Command-line Flags/Options
 
 Example usage
 
-    $ cocoonjs create Baz
-    $ cd Baz
+    $ cocoonjs create cocoonjs_test
+    $ cd cocoonjs_test
     $ cocoonjs platform add android
     $ cocoonjs plugin add com.ludei.webview.plus
-    $ cocoonjs build
-    $ cocoonjs serve android    
+    $ cocoonjs run  
 
 Documentation
 	http://support.ludei.com
