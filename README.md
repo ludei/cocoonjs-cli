@@ -34,21 +34,23 @@ $ cocoonjs cloud
 
 This command *is still* in development and should be avoid its usage for now.
 
-### FAQ ###
 
-#### ¿Which version of cordova is required? ####
-The CocoonJS command line tool automatically detects the Cordova version that you've installed in your computer, however, if you use a different cordova version that you've installed locally, you can use the --cordova-path argument to tell the CocoonJS-CLI where is the cordova binary that is need to be used for the cordova commands, eg:
+#### Regarding cordova versions ####
+
+cordova-cli 3 and higher is required.
+
+The CocoonJS command line tool automatically detects the Cordova version installed in your computer. However, if you have multiple versions installed locally, you can explicitly point to a specific path using the --cordova-path argument to force that cordova binary to execute, eg:
 
 
 ```
 $ cocoonjs platform add android --cordova-path=/Users/Cocoon/cordova/cordova-3.5.0-0.2.4/
 ```
-When using the *--cordova-path* the CocoonJS-CLI will find the cordova binary inside *cordova-3.5.0-0.2.4/bin/cordova* and will use it to spawn all the cordova based commands, you can use any cordova 3.x version.
+Using the *--cordova-path*, the CocoonJS-CLI will find the cordova binary inside *cordova-3.5.0-0.2.4/bin/cordova* and will use it to spawn all the cordova-based commands. You can use any cordova 3.x version.
 
 
 Documentation
 ----
-http://support.ludei.com
+http://support.ludei.com/hc/en-us/sections/200476168-CocoonJS-Command-Line-Interface
 
 License
 ----
