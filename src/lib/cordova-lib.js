@@ -36,15 +36,10 @@ CordovaLib.prototype.init = function(){
 CordovaLib.prototype.checkRequirements = function(){
 	
 	var options = {
-		avoidCordovaCMD : true,
 		silent : true
 	};
 
-	if(util.inWindows){
-		return this._cmd.exec("where cordova", options);
-	}else{
-		return this._cmd.exec("which cordova", options);
-	}
+	return this._cmd.exec(" --version", options);
 };
 
 CordovaLib.prototype.getCordovaLib = function(command){

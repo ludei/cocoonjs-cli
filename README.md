@@ -6,7 +6,7 @@ The CocoonJS command line tools let you build Cordova-based applications that be
 > The Webview+ provide you a consistent rendering engine independently of the Android 4.x version, so your app/game will run using the same rendering engine, with the fastest javascript engine in the world (V8).
 
 ## Requirements ##
-Please refer to [Cordova prerequisites](https://github.com/apache/cordova-cli#requirements) to set up your environment.
+Install cordova-cli 3.2 or higher (Cordova 3.5 is recommended). Please refer to [Cordova prerequisites](https://github.com/apache/cordova-cli#requirements) to set up your environment.
 
 After installing Cordova in your computer, execute the following command to install the CocoonJS CLI tools:
 
@@ -22,22 +22,10 @@ Use any valid cordova command with the CocoonJS-CLI to manage your project, eg:
 $ cocoonjs create /path/ com.ludei.test LudeiTest
 $ cocoonjs platform add android
 $ cocoonjs plugin add com.ludei.webview.plus
-$ cocoonjs build
 $ cocoonjs run
 ```
 
-CocoonJS Cloud project managment
-There is a command reserved to handle CocoonJS cloud based projects (http://cloud.ludei.com), the command is called "cloud" and can be used as follows:
-```
-$ cocoonjs cloud
-```
-
-This command *is still* in development and should be avoid its usage for now.
-
-
 #### Regarding cordova versions ####
-
-cordova-cli 3 and higher is required.
 
 The CocoonJS command line tool automatically detects the Cordova version installed in your computer. However, if you have multiple versions installed locally, you can explicitly point to a specific path using the --cordova-path argument to force that cordova binary to execute, eg:
 
@@ -70,4 +58,4 @@ limitations under the License.
 
 ### About the author ###
 
-Ludei is a San Francisco based company, creators of CocoonJS. Ludei aims to empower HTML5 industry with a set of tools that eases the adoption of HTML5 as the target platform for every mobile development.
+[Ludei](http://www.ludei.com) is a San Francisco based company, creators of [CocoonJS](https://www.ludei.com/cocoonjs/). Ludei aims to empower HTML5 industry with a set of tools that eases the adoption of HTML5 as the target platform for every mobile development.
