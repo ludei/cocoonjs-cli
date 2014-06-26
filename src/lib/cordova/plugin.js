@@ -112,30 +112,33 @@ CordovaPlugin.prototype.removeWebViewPlus = function(plugin){
 	var hook_path = path.join(project_hooks_path, "after_plugin_rm", plugin_id + ".js");
 	var hook_installation_path = path.join(project_hooks_path, "after_plugin_add", plugin_id + ".js");
 	var platforms = this.getPlatforms();
-	var isAndroidAvailable = platforms.filter(function(obj){ return obj.name === "android" });
+	var isAndroidAvailable = platforms.filter(function(platform_name){ return platform_name === "android" });
 
-	if( (isAndroidAvailable.length > 0) || (!this.WebViewPlusReq(plugin_path)) ){
-		util.log("The platform Android is not available in your project.");
+	if( (isAndroidAvailable.length === 0) ){
+		util.errorLog("The platform Android is not available in your project.");
+		process.exit(1);
+	}
+
+	if( !this.WebViewPlusReq(plugin_path) ){
 		process.exit(1);
 	}
 
 	if(!fs.existsSync(hook_path)){
-		util.log("Can't find uninstall hook.");
+		util.errorLog("Can't find uninstall hook.");
 		process.exit(1);
 	}
 
 	var exec_result = this.executeHook(plugin_path, hook_path);
 	if( exec_result.code !== 0){
-		util.log("Error executing Webview+ hook", hook_path);
-		util.log("Cannot uninstall manually the WebView+");
-		console.log(exec_result.output);
+		util.errorLog("Error executing Webview+ hook", hook_path);
+		console.error(exec_result.output);
 		return false;
 	};
 
 	var plugin_result = this._cmd.exec("plugin rm " + plugin_id);
 	if(plugin_result.code !== 0){
-		util.log("Cannot uninstall the Webview+");
-		util.log(plugin_result.output);
+		util.errorLog("Cannot uninstall the Webview+, failed to execute the command `cocoonjs plugin rm " + plugin_id + "`.");
+		util.errorLog(plugin_result.output);
 		process.exit(plugin_result.code);
 	};
 
@@ -143,9 +146,9 @@ CordovaPlugin.prototype.removeWebViewPlus = function(plugin){
 		fs.unlinkSync(hook_path);
 		fs.unlinkSync(hook_installation_path);
 	}catch(e){
-		util.log("Cannot delete Webview+ hooks, please remove them manually:");
-		util.log(hook_path, hook_installation_path);
-		console.log(e);
+		util.errorLog("Cannot delete Webview+ hooks, please remove them manually:");
+		util.errorLog(hook_path, hook_installation_path);
+		console.error(e);
 	}
 
 	util.log("Webview+ uninstalled correctly");
@@ -159,15 +162,14 @@ CordovaPlugin.prototype.installWebViewPlus = function(plugin){
 	var plugin_id = plugin.plugin_id;
 	var platforms = this.getPlatforms();
 	var plugin_path = path.join(process.cwd(), "plugins", plugin_id, "android");
-	var isAndroidAvailable = platforms.filter(function(obj){ return obj.name === "android" });
+	var isAndroidAvailable = platforms.filter(function(platform_name){ return platform_name === "android" });
 
-	if( (isAndroidAvailable.length > 0)){
-		util.log("The platform Android is not available in your project. Please execute 'cocoonjs platform add android' before installing the Webview+");
+	if( (isAndroidAvailable.length === 0) ){
+		util.errorLog("The platform Android is not available in your project. Please execute 'cocoonjs platform add android' before installing the Webview+");
 		process.exit(1);
 	}
 
 	if( !this.WebViewPlusReq(plugin_path) ){
-		util.log("Invalid configuration needed to install the Weview+");
 		process.exit(1);
 	}
 
@@ -177,8 +179,8 @@ CordovaPlugin.prototype.installWebViewPlus = function(plugin){
 
 	var plugin_result 	= this._cmd.exec("plugin add " + plugin.bundle_id);
 	if(plugin_result.code !== 0) {
-		util.log("Cannot install the WebView+ in your project");
-		console.log(plugin_result.output);
+		util.errorLog("Cannot install the WebView+ in your project, failed to execute the command `cocoonjs plugin add " + plugin.bundle_id + "`. ");
+		console.error(plugin_result.output);
 		process.exit(plugin_result.code);
 	}
 
@@ -186,13 +188,13 @@ CordovaPlugin.prototype.installWebViewPlus = function(plugin){
 	var build_xml_path 	= path.join(plugin_path, "build.xml");
 	
 	if(!fileExists(build_xml_path)) {
-		util.log("Can't find a build.xml needed to build the WebView+ project");
+		util.errorLog("Can't find a build.xml needed to build the WebView+ project");
 		process.exit(1);
 	}
 
 	var installed_hooks = this.installHooks(hooks_path);
 	if( !installed_hooks ){
-		util.log("Cannot install needed hook in your project");
+		util.errorLog("Cannot install needed hook in your project");
 		process.exit(1);
 	}
 
@@ -200,7 +202,7 @@ CordovaPlugin.prototype.installWebViewPlus = function(plugin){
 	var release_result 	= this._cmd.exec("ant release -buildfile " + build_xml_path, { avoidCordovaCMD : true });
 
 	if(release_result.code !== 0) {
-		util.log("Cannot build Webview+ project");
+		util.errorLog("Cannot build Webview+ project");
 		this._cmd.exec("plugin rm " + plugin_id);
 		process.exit(release_result.code);
 	}
@@ -214,16 +216,16 @@ CordovaPlugin.prototype.installWebViewPlus = function(plugin){
 	};
 
 	if(!hook_path){
-		util.log("Cannot find a valid Webview+ hook to be executed.");
+		util.errorLog("Cannot find a valid Webview+ hook to be executed.");
 		process.exit(1);
 	}
 
 	var installation_result = this.executeHook(plugin_path, hook_path);
 	if( installation_result.code !== 0){
-		util.log("Error executing Webview+ hook", hook_path);
-		util.log("here's the error info we have");
+		util.errorLog("Error executing Webview+ hook", hook_path);
+		util.errorLog("here's the error info we have");
 		this._cmd.exec("plugin rm " + plugin_id);
-		console.log(installation_result.output);
+		console.error(installation_result.output);
 		return false;
 	};
 

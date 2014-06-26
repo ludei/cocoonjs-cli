@@ -18,6 +18,7 @@ var fileExists = fs.existsSync;
     utils.OPERATING_SYSTEM  = os.type();
     utils.inWindows         = (os.platform() === 'win32');
     utils.TAG               = ("[" + ("CocoonJS") + "] ").cyan;
+    utils.TAG_ERROR         = ("[" + ("CocoonJS") + "] ").cyan;
 
     /**
      * Creates a valid path depending on the platform
@@ -96,6 +97,14 @@ var fileExists = fs.existsSync;
             args = args.substring(0, args.length - 1);
         }
         console.log(utils.TAG + args);
+    };
+
+    utils.errorLog = function(){
+        var args = Array.prototype.slice.call(arguments).join(" ");
+        if(args.length > 0 && new RegExp(/\\n/).test(JSON.stringify(args[args.length - 1]))){
+            args = args.substring(0, args.length - 1);
+        }
+        console.error(utils.TAG_ERROR + (args.red));
     };
 
     module.exports = utils;
