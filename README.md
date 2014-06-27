@@ -8,6 +8,8 @@ The CocoonJS command line tools let you build Cordova-based applications that be
 ## Requirements ##
 Install cordova-cli 3.2 or higher (Cordova 3.5 is recommended). Please refer to [Cordova prerequisites](https://github.com/apache/cordova-cli#requirements) to set up your environment.
 
+If you're using the [webview+](https://github.com/ludei/webview-plus) plugin, you'll also need [android API](http://developer.android.com/guide/topics/manifest/uses-sdk-element.html) level 19.
+
 After installing Cordova in your computer, execute the following command to install the CocoonJS CLI tools:
 
 ```
