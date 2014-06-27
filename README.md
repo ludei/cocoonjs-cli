@@ -36,6 +36,16 @@ $ cocoonjs platform add android --cordova-path=/Users/Cocoon/cordova/cordova-3.5
 Using the *--cordova-path*, the CocoonJS-CLI will find the cordova binary inside *cordova-3.5.0-0.2.4/bin/cordova* and will use it to spawn all the cordova-based commands. You can use any cordova 3.x version.
 
 
+#### Troubleshooting ####
+
+CocoonJS command line has a verbose mode. If you get any error, launch the command  with -d flag. And you'll get more info. For instance:
+
+```
+cocoonjs plugin add com.ludei.webview.plus -d
+```
+
+And post the info in the console attached to your issue.
+
 Documentation
 ----
 http://support.ludei.com/hc/en-us/sections/200476168-CocoonJS-Command-Line-Interface
