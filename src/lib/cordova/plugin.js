@@ -80,21 +80,28 @@ CordovaPlugin.prototype.WebViewPlusReq = function(webview_plus_path){
 	var options = { avoidCordovaCMD : true, silent : true };
 	var command = null;
 
-	command = (util.inWindows) ? "where android" : "which android";
+	command = (util.inWindows) ? "android --help" : "which android";
 	result 	= this._cmd.exec(command, options);
 	if(result.code !== 0){
 		util.log("The command `android` failed. Add the platform-tools/ as well as the tools/ directory to your PATH environment variable.");
 		return false;
 	}
 
-	command = (util.inWindows) ? "echo %ANDROID_HOME%" : "echo $ANDROID_HOME";
+	command = (util.inWindows) ? "set" : "echo $ANDROID_HOME";
 	result 	= this._cmd.exec(command, options);
-	if( (result.output.length < 2) ) {
-		util.log("Missing environment variable ANDROID_HOME. The ANDROID_HOME variable must exist and should point to your android SDK directory.");
-		return false;
+	if(util.inWindows){
+		if(result.output.indexOf("ANDROID_HOME") === -1){
+			util.log("Missing environment variable ANDROID_HOME. The ANDROID_HOME variable must exist and should point to your android SDK directory.");
+			return false;
+		}
+	}else{
+		if( (result.output.length < 2) ) {
+			util.log("Missing environment variable ANDROID_HOME. The ANDROID_HOME variable must exist and should point to your android SDK directory.");
+			return false;
+		}
 	}
 
-	command = (util.inWindows) ? "where javac" : "which javac";
+	command = (util.inWindows) ? "javac -help" : "which javac";
 	result 	= this._cmd.exec(command, options);
 	if(result.code !== 0){
 		util.log("The command `javac` failed. Download the latest JDK at http://www.oracle.com/technetwork/java/javase/downloads/index.html");
@@ -176,7 +183,7 @@ CordovaPlugin.prototype.installWebViewPlus = function(plugin){
 	if(this._argv['plugins-path']){
 		plugin.bundle_id = path.join(this._argv['plugins-path'] , plugin.plugin_id);
 	}
-
+	util.log("Downloading Webview+...");
 	var plugin_result 	= this._cmd.exec("plugin add " + plugin.bundle_id);
 	if(plugin_result.code !== 0) {
 		util.errorLog("Cannot install the WebView+ in your project, failed to execute the command `cocoonjs plugin add " + plugin.bundle_id + "`. ");
@@ -203,7 +210,6 @@ CordovaPlugin.prototype.installWebViewPlus = function(plugin){
 
 	if(release_result.code !== 0) {
 		util.errorLog("Cannot build Webview+ project");
-		this._cmd.exec("plugin rm " + plugin_id);
 		process.exit(release_result.code);
 	}
 
