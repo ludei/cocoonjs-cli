@@ -301,12 +301,12 @@ CordovaPlugin.prototype.executeHook = function(plugin_path, hook_path){
 	var env_vars = "";
 	if(util.inWindows){
 		env_vars += ("set CORDOVA_PATH_BINARY='" + new Buffer(CORDOVA_CMD_PATH).toString('base64') +"' & ");
-		env_vars += ("set CORDOVA_VERSION='" + new Buffer(CORDOVA_VERSION).toString('base64') +"' & ");
+		env_vars += ("set CORDOVA_CUSTOM_VERSION='" + new Buffer(CORDOVA_VERSION).toString('base64') +"' & ");
 		env_vars += ("set CORDOVA_PROJECT_NAME='" + new Buffer(CORDOVA_PROJECT_NAME).toString('base64') +"' & ");
 		env_vars += ("set CORDOVA_PLUGIN_PATH='" + new Buffer(CORDOVA_PLUGIN_PATH).toString('base64') +"' & ");
 	}else{
 		env_vars += ("export CORDOVA_PATH_BINARY='" + new Buffer(CORDOVA_CMD_PATH).toString('base64') +"' && ");
-		env_vars += ("export CORDOVA_VERSION='" + new Buffer(CORDOVA_VERSION).toString('base64') +"' && ");
+		env_vars += ("export CORDOVA_CUSTOM_VERSION='" + new Buffer(CORDOVA_VERSION).toString('base64') +"' && ");
 		env_vars += ("export CORDOVA_PROJECT_NAME='" + new Buffer(CORDOVA_PROJECT_NAME).toString('base64') +"' && ");
 		env_vars += ("export CORDOVA_PLUGIN_PATH='" + new Buffer(CORDOVA_PLUGIN_PATH).toString('base64') +"' && ");
 	}
