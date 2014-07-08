@@ -21,7 +21,8 @@ $ npm install -g cocoonjs
 Use any valid cordova command with the CocoonJS-CLI to manage your project, eg:
 
 ```
-$ cocoonjs create /path/ com.ludei.test LudeiTest
+$ cocoonjs create MyProject com.ludei.test LudeiTest
+$ cd MyProject
 $ cocoonjs platform add android
 $ cocoonjs plugin add com.ludei.webview.plus
 $ cocoonjs run
