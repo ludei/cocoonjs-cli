@@ -4,7 +4,7 @@ var shell = require('shelljs'),
 
 function Cmd(cmd_path, options) {
     this.cmd = cmd_path;
-    this.verboseEnabled = !options.verboseEnabled;
+    this.verboseEnabled = (options) ? !options.verboseEnabled : false;
 }
 
 Cmd.prototype.getCmdBinaryPath = function() {

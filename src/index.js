@@ -46,9 +46,8 @@ module.exports = function CLI(args) {
     					"compile",
     					"build",
     					"emulate",
-    					"run",
-    					"serve" ];
-    var COCOON_CMD 	= [ "cloud" ];
+    					"run" ];
+    var COCOON_CMD 	= [ "cloud", "serve" ];
     
     if(options.command.length === 0) {
         return util.printHelpInfo();
