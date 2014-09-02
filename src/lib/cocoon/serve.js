@@ -17,6 +17,7 @@ function LiveReload(cmd, command, argv) {
     this.init();
 }
 
+// Function helpers for serving specific files of cordova
 LiveReload.prototype.serveCordovaLibrary = function(res, platform){
     var cordova_lib_path    = path.join(process.cwd() , "platforms", platform, "platform_www", "cordova.js");
     var cordova_lib_content = fs.readFileSync( cordova_lib_path , 'utf-8');
@@ -29,6 +30,7 @@ LiveReload.prototype.serveCordovaPlugins = function(res, platform){
     res.end( cordova_plugin_content );
 }
 
+// Middleware for gulp, serves static files and injects livereload snippet in case of inde.html file
 LiveReload.prototype.middlewareCordovaLib = function(req, res, next){
     
     util.log("Serving file " + req.url);
@@ -56,6 +58,7 @@ LiveReload.prototype.middlewareCordovaLib = function(req, res, next){
         }
     }
 
+    //Special files, served from specific directories.
     if(queryString[0] && queryString[0] === "cordova.js"){ 
         me.serveCordovaLibrary(res, platformId);
         return;
@@ -74,6 +77,8 @@ LiveReload.prototype.middlewareCordovaLib = function(req, res, next){
         
         if( path_file === "" || path_file === "/" + platformId){
             file = me.getStaticFile("index.html", res);
+            // next middleware only loaded if we're using index.html
+            // TODO: read from config file the main HTML file to inject there.
             next();
         }else{
             file = me.getStaticFile(path_file, res);
@@ -81,11 +86,9 @@ LiveReload.prototype.middlewareCordovaLib = function(req, res, next){
         
         if(file){
             res.end( file );
-            // return;
-        }else{
-            // util.error('Error sendig data ' + path_file + ' --- '+ JSON.stringify(file));
         }
     }
+    return;
 
 };
 
@@ -98,7 +101,7 @@ LiveReload.prototype.getStaticFile = function(path_file, res){
     var mimeType = mime.lookup(static_file);
 
     
-
+    // Detection of file type and return with proper myme type and encondig
     if(fs.existsSync(static_file)){
         res.writeHead(200, {'Content-Type': mimeType });
         return fs.readFileSync( static_file , (isPlainTextFile) ? 'utf-8' : undefined);
