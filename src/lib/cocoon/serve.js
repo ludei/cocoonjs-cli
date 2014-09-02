@@ -23,6 +23,12 @@ LiveReload.prototype.serveCordovaLibrary = function(res, platform){
     res.end( cordova_lib_content );
 }
 
+LiveReload.prototype.serveCordovaPlugins = function(res, platform){
+    var cordova_plugin_path    = path.join(process.cwd() , "platforms", platform, "assets/www", "cordova_plugins.js");
+    var cordova_plugin_content = fs.readFileSync( cordova_plugin_path , 'utf-8');
+    res.end( cordova_plugin_content );
+}
+
 LiveReload.prototype.middlewareCordovaLib = function(req, res, next){
     
     util.log("Serving file " + req.url);
@@ -50,7 +56,12 @@ LiveReload.prototype.middlewareCordovaLib = function(req, res, next){
         }
     }
 
-    if(queryString[0] && queryString[0] === "cordova.js"){
+    if(queryString[0] && queryString[0] === "cordova.js"){ 
+        me.serveCordovaLibrary(res, platformId);
+        return;
+    }
+
+    if(queryString[0] && queryString[0] === "cordova_plugins.js"){
         me.serveCordovaLibrary(res, platformId);
         return;
     }
@@ -63,17 +74,19 @@ LiveReload.prototype.middlewareCordovaLib = function(req, res, next){
         
         if( path_file === "" || path_file === "/" + platformId){
             file = me.getStaticFile("index.html", res);
+            next();
         }else{
             file = me.getStaticFile(path_file, res);
         }
         
         if(file){
             res.end( file );
-            return;
+            // return;
+        }else{
+            // util.error('Error sendig data ' + path_file + ' --- '+ JSON.stringify(file));
         }
     }
 
-    next();
 };
 
 LiveReload.prototype.getStaticFile = function(path_file, res){
@@ -81,14 +94,14 @@ LiveReload.prototype.getStaticFile = function(path_file, res){
     
     var textExtensions = [".htm",".html",".js",".css"];
     var isPlainTextFile = this.isPlainTextFile(path_file,textExtensions);
-    
+
     var mimeType = mime.lookup(static_file);
 
     
 
     if(fs.existsSync(static_file)){
         res.writeHead(200, {'Content-Type': mimeType });
-        return fs.readFileSync( static_file , (isPlainTextFile) ? 'utf-8' : 'binary');
+        return fs.readFileSync( static_file , (isPlainTextFile) ? 'utf-8' : undefined);
     }else{
         return false;
     }
@@ -96,7 +109,7 @@ LiveReload.prototype.getStaticFile = function(path_file, res){
 
 LiveReload.prototype.isPlainTextFile = function (str, strArray) {
     for (var j=0; j<strArray.length; j++) {
-        if (strArray[j].match(str)) return j;
+        if (str.indexOf(strArray[j]) >= 0 ) return true;
     }
     return false;
 }
