@@ -7,6 +7,7 @@ var shell 	= require('shelljs'),
 	this._argv 		= argv;										// Full list of commands, constains optional arguments like --cordova-path
 	this._args 		= util.cleanUpArguments(options.command);	// command and flags
 	this._argsStr 	= this._args.join(" ");						// command and flags as string
+	this._cmdPath 	= util.getCordovaCMD(argv);
 
 	this.init();
 };
@@ -14,7 +15,7 @@ var shell 	= require('shelljs'),
 CocoonLib.prototype.init = function(){
 	
 	shell.exec("cd " + process.cwd());
-	
+		
 	var Lib = this.getCocoonLib(this._args[0]);
 
 	if(!Lib){

@@ -14,6 +14,20 @@ var shell 	= require('shelljs'),
 
 function LiveReload(cmd, command, argv) {
 	util.log("Executing command '" + command + "'");
+
+    this.cmd = cmd;
+
+    util.log("A 'cordova prepare' is needed before executing 'cordova serve'.");
+    // Prepare the project before serving it.
+    var prepare = this.cmd.exec("prepare", { silent : false });
+    if(prepare.code !== 0){
+        util.errorLog("Error executing 'cordova prepare'.");
+        process.exit(0);
+    }
+
+    util.log("Command 'cordova prepare' executed correctly.");
+    console.log(""); // Blank line for spacing unrelated logs of the livereload
+
     this.init();
 }
 
@@ -61,12 +75,12 @@ LiveReload.prototype.middlewareCordovaLib = function(req, res, next){
     //Special files, served from specific directories.
     if(queryString[0] && queryString[0] === "cordova.js"){ 
         me.serveCordovaLibrary(res, platformId);
-        return;
+        next();
     }
 
     if(queryString[0] && queryString[0] === "cordova_plugins.js"){
-        me.serveCordovaLibrary(res, platformId);
-        return;
+        me.serveCordovaPlugins(res, platformId);
+        next();
     }
     
     if(platformId === queryString[0]) queryString.shift();
@@ -123,7 +137,7 @@ LiveReload.prototype.init = function(){
     me = this;
 
     if( !fs.existsSync(root) ){
-        util.log("Current working directory is not a CocoonJS-based project.");
+        util.log("Current working directory is not a CocoonJS/Cordova-based project.");
         process.exit();
     }
 

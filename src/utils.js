@@ -117,6 +117,22 @@ var fileExists = fs.existsSync;
         return platforms;
     };
 
+    utils.getCordovaCMD = function(argv){
+        var path = (utils.inWindows) ? "cordova.cmd" : "cordova";
+    
+        if(!argv['cordova-path']) return path;
+
+        var path_info   = fs.lstatSync(argv['cordova-path']);
+        var bin_path    = argv['cordova-path'] + "/bin/cordova";
+        if( path_info.isDirectory() && fs.existsSync(bin_path) ){
+            path = "node " + bin_path;
+        }else{
+            path = "node " + argv['cordova-path'];
+        }
+
+        return path;
+    }
+
     utils.errorLog = function(){
         var args = Array.prototype.slice.call(arguments).join(" ");
         if(args.length > 0 && new RegExp(/\\n/).test(JSON.stringify(args[args.length - 1]))){
