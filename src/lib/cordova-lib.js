@@ -8,7 +8,7 @@ function CordovaLib(argv, options) {
 	this._argv 		= argv;										// Optional arguments like --cordova-path or --plugins-path
 	this._args 		= util.cleanUpArguments(options.command);	// Cordova command and flags
 	this._argsStr 	= this._args.join(" ");						// Cordova command and flags as string
-	this._cmdPath	= this.getCordovaCMD(argv); 					// Path to the Cordova CLI executable
+	this._cmdPath	= util.getCordovaCMD(argv); 					// Path to the Cordova CLI executable
 	this._cmd 		= null;
 	this._options 	= options;
 
@@ -50,10 +50,6 @@ CordovaLib.prototype.getCordovaLib = function(command){
 	}else{
 		return require("./cordova/generic.js");
 	}
-};
-
-CordovaLib.prototype.getCordovaCMD = function(){
-	return util.getCordovaCMD();
 };
 
 module.exports = CordovaLib;
