@@ -39,9 +39,19 @@ LiveReload.prototype.serveCordovaLibrary = function(res, platform){
 }
 
 LiveReload.prototype.serveCordovaPlugins = function(res, platform){
-    var cordova_plugin_path    = path.join(process.cwd() , "platforms", platform, "assets/www", "cordova_plugins.js");
+    var cordova_plugin_path    = path.join(process.cwd() , "platforms", platform, this.getCordovaPluginsPath(platform), "cordova_plugins.js");
     var cordova_plugin_content = fs.readFileSync( cordova_plugin_path , 'utf-8');
     res.end( cordova_plugin_content );
+}
+
+LiveReload.prototype.getCordovaPluginsPath = function(platform){
+    var plugins_path;
+    if(platform === "android"){
+        plugins_path = "assets/www";
+    }else if(platform === "ios"){
+        plugins_path = "www";
+    }
+    return plugins_path;
 }
 
 // Middleware for gulp, serves static files and injects livereload snippet in case of inde.html file
@@ -59,16 +69,14 @@ LiveReload.prototype.middlewareCordovaLib = function(req, res, next){
         process.exit(0);
     }
 
-    if (!queryString) {
-        res.end( "Main page" );
+    if (queryString.length === 1 && queryString[0] === "") {
+        res.end( "main section" );
         return;
     }
 
-    if(!platformId){
-        platformId = queryString[0];
-        if (!platforms[platformId]) {
-        res.end( "Platform not found" );
-        return;
+    if( platforms[queryString[0]] ) {
+        if( platformId != queryString[0]){
+            platformId = queryString[0];
         }
     }
 
