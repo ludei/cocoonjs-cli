@@ -1,5 +1,12 @@
 # CocoonJS-cli Release Notes
 
+###1.0.0-0.5.0 ()
+* cocoonjs serve now has livereload enabled by default
+
+* Known issues:
+  * cocoonjs serve may crash on canvas+ environments
+  * livereload feature may not work in system webview for certain android versions
+
 ### 1.0.0-0.4.0 ()
 * Improved Webview+ installation method
 
