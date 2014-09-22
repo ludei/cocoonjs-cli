@@ -7,6 +7,7 @@ var colors  = require('colors'),
 var fileExists = fs.existsSync;
 
 (function(){
+    
     /**
      * The "exported" object, this object holds all the "utils" functionalities
      */
@@ -51,12 +52,14 @@ var fileExists = fs.existsSync;
         if( fileExists(config_path) ){
             var data = fs.readFileSync(config_path).toString('UTF-8');
             parser.parseString(data, callback);
+            return;
         };
 
         config_path = path.join(project_path, "www","config.xml");
         if( fileExists(config_path) ){
             var data = fs.readFileSync(config_path).toString('UTF-8');
             parser.parseString(data, callback);
+            return;
         };
 
         return callback(false);

@@ -10,7 +10,8 @@ var shell 	= require('shelljs'),
     me = this,
     root = path.join(process.cwd() , "www"),
     platformId = null,
-    mime = require('mime');
+    mime = require('mime'),
+    config_xml;
 
 function LiveReload(cmd, command, argv) {
 	util.log("Executing command '" + command + "'");
@@ -28,7 +29,14 @@ function LiveReload(cmd, command, argv) {
     util.log("Command 'cordova prepare' executed correctly.");
     console.log(""); // Blank line for spacing unrelated logs of the livereload
 
-    this.init();
+    me = this;
+    util.getConfigXML(function(err, xml){
+        if(err){
+            process.exit(0);
+        }
+        config_xml = xml;
+        me.init();
+    });
 }
 
 // Function helpers for serving specific files of cordova
@@ -70,7 +78,7 @@ LiveReload.prototype.middlewareCordovaLib = function(req, res, next){
     }
 
     if (queryString.length === 1 && queryString[0] === "") {
-        res.end( "main section" );
+        res.end( me.getMainHTML(platforms) );
         return;
     }
 
@@ -114,12 +122,17 @@ LiveReload.prototype.middlewareCordovaLib = function(req, res, next){
 
 };
 
+LiveReload.prototype.getMainHTML = function (platforms){
+    var ServeTemplateManager = require("./serve_home.js");
+    return new ServeTemplateManager(platforms, config_xml).getTemplate();
+};
+
 LiveReload.prototype.getStaticFile = function(path_file, res){
     var static_file = path.join(process.cwd() , "www", path_file);
     
     var textExtensions = [".htm",".html",".js",".css"];
     var isPlainTextFile = this.isPlainTextFile(path_file,textExtensions);
-
+    
     var mimeType = mime.lookup(static_file);
 
     
@@ -142,7 +155,6 @@ LiveReload.prototype.isPlainTextFile = function (str, strArray) {
 LiveReload.prototype.init = function(){
     var port = 8070;
     var server_url = "http://" + ip.address() + ":" + port;
-    me = this;
 
     if( !fs.existsSync(root) ){
         util.log("Current working directory is not a CocoonJS/Cordova-based project.");
