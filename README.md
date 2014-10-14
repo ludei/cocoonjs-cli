@@ -8,6 +8,8 @@ The CocoonJS command line tools let you build Cordova-based applications that be
 ## Requirements ##
 Install cordova-cli 3.2 or higher (Cordova 3.5 is recommended). Please refer to [Cordova prerequisites](https://github.com/apache/cordova-cli#requirements) to set up your environment.
 
+If you're using the [webview+](https://github.com/ludei/webview-plus) plugin, you'll also need [android API](http://developer.android.com/guide/topics/manifest/uses-sdk-element.html) level 19.
+
 After installing Cordova in your computer, execute the following command to install the CocoonJS CLI tools:
 
 ```
@@ -36,6 +38,16 @@ $ cocoonjs platform add android --cordova-path=/Users/Cocoon/cordova/cordova-3.5
 ```
 Using the *--cordova-path*, the CocoonJS-CLI will find the cordova binary inside *cordova-3.5.0-0.2.4/bin/cordova* and will use it to spawn all the cordova-based commands. You can use any cordova 3.x version.
 
+
+#### Troubleshooting ####
+
+CocoonJS command line has a verbose mode. If you get any error, launch the command  with -d flag. And you'll get more info. For instance:
+
+```
+cocoonjs plugin add com.ludei.webview.plus -d
+```
+
+And post the info in the console attached to your issue.
 
 Documentation
 ----

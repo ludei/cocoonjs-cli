@@ -7,6 +7,7 @@ var colors  = require('colors'),
 var fileExists = fs.existsSync;
 
 (function(){
+    
     /**
      * The "exported" object, this object holds all the "utils" functionalities
      */
@@ -51,17 +52,19 @@ var fileExists = fs.existsSync;
         if( fileExists(config_path) ){
             var data = fs.readFileSync(config_path).toString('UTF-8');
             parser.parseString(data, callback);
+            return;
         };
 
         config_path = path.join(project_path, "www","config.xml");
         if( fileExists(config_path) ){
             var data = fs.readFileSync(config_path).toString('UTF-8');
             parser.parseString(data, callback);
+            return;
         };
 
-        return false;
+        return callback(false);
     };
-    
+
     /**
      * Checks if this platform ready to manage cordova compilations, also returns
      * the cordova version.
@@ -99,6 +102,40 @@ var fileExists = fs.existsSync;
         console.log(utils.TAG + args);
     };
 
+    utils.getPlatforms = function(){
+        var platforms_path = path.join( process.cwd(), "platforms" );
+        var platforms = [];
+
+        if( fs.existsSync(platforms_path) ){
+            var dir_content = fs.readdirSync(platforms_path);
+            for (var i = 0; i < dir_content.length; i++) {
+                var stat = fs.statSync( path.join( platforms_path, dir_content[i]) );
+                if(stat.isDirectory()){
+                    platforms.push(dir_content[i]);
+                    platforms[dir_content[i]] = true;
+                }
+            };
+        }
+
+        return platforms;
+    };
+
+    utils.getCordovaCMD = function(argv){
+        var path = (utils.inWindows) ? "cordova.cmd" : "cordova";
+    
+        if(!argv['cordova-path']) return path;
+
+        var path_info   = fs.lstatSync(argv['cordova-path']);
+        var bin_path    = argv['cordova-path'] + "/bin/cordova";
+        if( path_info.isDirectory() && fs.existsSync(bin_path) ){
+            path = "node " + bin_path;
+        }else{
+            path = "node " + argv['cordova-path'];
+        }
+
+        return path;
+    }
+
     utils.errorLog = function(){
         var args = Array.prototype.slice.call(arguments).join(" ");
         if(args.length > 0 && new RegExp(/\\n/).test(JSON.stringify(args[args.length - 1]))){
@@ -106,6 +143,20 @@ var fileExists = fs.existsSync;
         }
         console.error(utils.TAG_ERROR + (args.red));
     };
+
+    utils.cleanUpArguments = function(CMD_ARGS){
+        for (var i = 0; i < CMD_ARGS.length; i++){
+        if(CMD_ARGS[i].indexOf("--cordova-path") !== -1) {
+            CMD_ARGS.splice(i, 1);
+            continue;
+        }
+        if(CMD_ARGS[i].indexOf("--plugins-path") !== -1) {
+            CMD_ARGS.splice(i, 1);
+            continue;
+        }
+    }
+    return CMD_ARGS;
+    }
 
     module.exports = utils;
 })();

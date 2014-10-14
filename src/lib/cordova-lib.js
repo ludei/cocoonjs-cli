@@ -6,9 +6,9 @@ var shell 	= require('shelljs'),
 function CordovaLib(argv, options) {
 
 	this._argv 		= argv;										// Optional arguments like --cordova-path or --plugins-path
-	this._args 		= this.cleanUpArguments(options.command);	// Cordova command and flags
+	this._args 		= util.cleanUpArguments(options.command);	// Cordova command and flags
 	this._argsStr 	= this._args.join(" ");						// Cordova command and flags as string
-	this._cmdPath	= this.getCordovaCMD(); 					// Path to the Cordova CLI executable
+	this._cmdPath	= util.getCordovaCMD(argv); 					// Path to the Cordova CLI executable
 	this._cmd 		= null;
 	this._options 	= options;
 
@@ -50,36 +50,6 @@ CordovaLib.prototype.getCordovaLib = function(command){
 	}else{
 		return require("./cordova/generic.js");
 	}
-};
-
-CordovaLib.prototype.getCordovaCMD = function(CMD_ARGS){
-	var path = (util.inWindows) ? "cordova.cmd" : "cordova";
-	
-	if(!this._argv['cordova-path']) return path;
-
-	var path_info = fs.lstatSync(this._argv['cordova-path']);
-	var bin_path = this._argv['cordova-path'] + "/bin/cordova";
-	if( path_info.isDirectory() && fs.existsSync(bin_path) ){
-		path = "node " + bin_path;
-	}else{
-		path = "node " + this._argv['cordova-path'];
-	}
-
-	return path;
-};
-
-CordovaLib.prototype.cleanUpArguments = function(CMD_ARGS){
-	for (var i = 0; i < CMD_ARGS.length; i++){
-		if(CMD_ARGS[i].indexOf("--cordova-path") !== -1) {
-			CMD_ARGS.splice(i, 1);
-			continue;
-		}
-		if(CMD_ARGS[i].indexOf("--plugins-path") !== -1) {
-			CMD_ARGS.splice(i, 1);
-			continue;
-		}
-	}
-	return CMD_ARGS;
 };
 
 module.exports = CordovaLib;

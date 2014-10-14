@@ -33,7 +33,13 @@
     "shelljs": "0.3.0",
     "minimist": "0.1.0",
     "colors": "0.6.2",
-    "xml2js": "0.4.4"
+    "xml2js": "0.4.4",
+    "gulp" : "3.8.6",
+    "gulp-connect" : "2.0.6",
+    "tiny-lr": "0.0.7",
+    "qrcode-terminal" : "0.9.5",
+    "ip" : "0.3.1",
+    "mime" : "1.2.11"
   },
   "author": "Carlos Hernández Gómez - @k4rliky",
   "contributors": [
