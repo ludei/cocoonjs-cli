@@ -1,0 +1,95 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>{{title}}</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<style type="text/css">
+	#wrapper{
+		width: 600px;
+		margin: 0px auto;
+	}
+	#head{
+		margin-top: 0;
+	}
+	@media only screen 
+	and (min-device-width : 320px) 
+	and (max-device-width : 480px) {
+		#wrapper{
+			width: auto;
+			margin: 5px;
+		}
+		#head {
+			margin-top: 35px;
+		}
+	}
+	.platform_advice{
+		
+    font-size: 10px;
+    color: #c8c8c8;
+    font-style: italic;
+
+	}
+	body{
+		font-family: 'Verdana'
+	}
+	a{
+		color: #1CC9C9;
+	}
+	#head img.logo {
+		width: 200px;
+	}
+	#content{
+		margin: 0px auto;
+	}
+	#footer{
+		border-top: 1px solid #E9E9E9;
+		font-size: 0.9em;
+	}
+	#footer p{
+		margin-top: 5px;
+	}
+	h1,h2,h3,h4,h5,h6{
+		color: #c8c8c8;
+	}
+	h2{
+		margin: 0;
+		padding: 0;
+	}
+	#footer{
+		color: #c8c8c8;
+	}
+	#footer a {
+		font-weight: bold;
+		color: #DAD9D9;
+	}
+	</style>
+</head>
+<body>
+<div id="wrapper">
+	<header id="head">
+		<a href="http://www.ludei.com"><img src="https://d1315078ftetqc.cloudfront.net/assets/img/layout/logo.png" class="logo" /></a>
+	</header>
+	
+	<section id="content">
+	
+		<article>
+			<header>
+				<h2>{{heading_title}}</h2>
+				<h3>Project information:</h3>
+				{{project_info}}
+				<h3>Available platforms:</h3>
+				<ul>{{platforms}}</ul>
+				<div class="platform_advice">Missing platforms? run $ cocoonjs platform add &lt;platform&gt;</div>
+			</header>
+			<p></p>
+		</article>
+		<!-- <img src="https://d1315078ftetqc.cloudfront.net/assets/img/pages/home/robot_ludei.jpg"/> -->
+	</section>
+
+	<footer id="footer">
+		<p>Visit <a href="https://www.ludei.com/showcase/">Ludei</a> for a showcase of amazing apps and games published with CocoonJS.</p>
+	</footer>
+</div>
+</body>
+</html>
