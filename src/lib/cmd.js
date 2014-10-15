@@ -66,7 +66,7 @@ Cmd.prototype.execAsync = function(command, options) {
     //Spawn command needs command and args passed as array
     var tempArr = complete_command.split(' ');
     var command = tempArr[0];
-    tempArr.shift()
+    tempArr.shift();
     var args = tempArr;
 
     // Create child process using spawn of node
