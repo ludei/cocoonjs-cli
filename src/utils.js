@@ -19,7 +19,7 @@ var fileExists = fs.existsSync;
     utils.OPERATING_SYSTEM  = os.type();
     utils.inWindows         = (os.platform() === 'win32');
     utils.TAG               = ("[" + ("CocoonJS") + "] ").cyan;
-    utils.TAG_ERROR         = ("[" + ("CocoonJS") + "] ").cyan;
+    utils.TAG_ERROR         = ("[" + ("CocoonJS") + "] ").yellow;
 
     /**
      * Creates a valid path depending on the platform
@@ -77,12 +77,20 @@ var fileExists = fs.existsSync;
             return false;
         }
     };
-
-    utils.printHelpInfo = function(){
-        var help = path.join(__dirname, "../", "help.txt")
+    /**
+     * Prints a help file.
+     * @param filename
+     * @returns {*}
+     */
+    utils.printHelpInfo = function(filename){
+        var help = path.join(__dirname, "/help", (filename) ? filename : "help.txt" );
         return console.log( fs.readFileSync( help ).toString() );
     };
 
+    /**
+     * Basic extends functionality for JS
+     * @returns {*}
+     */
     utils.extend = function(){
         for(var i=1; i<arguments.length; i++)
                 for(var key in arguments[i])
@@ -92,13 +100,15 @@ var fileExists = fs.existsSync;
     }
 
     /**
-     * Utility log function, TODO: handle verbosity
+     * Utility log function
+     * TODO: handle verbosity
      */
     utils.log = function(){
         var args = Array.prototype.slice.call(arguments).join(" ");
         if(args.length > 0 && new RegExp(/\\n/).test(JSON.stringify(args[args.length - 1]))){
             args = args.substring(0, args.length - 1);
         }
+        args = args.replace('`cordova','`cocoonjs');
         console.log(utils.TAG + args);
     };
 
@@ -141,21 +151,26 @@ var fileExists = fs.existsSync;
         if(args.length > 0 && new RegExp(/\\n/).test(JSON.stringify(args[args.length - 1]))){
             args = args.substring(0, args.length - 1);
         }
+        args = args.replace('`cordova','`cocoonjs');
         console.error(utils.TAG_ERROR + (args.red));
     };
 
     utils.cleanUpArguments = function(CMD_ARGS){
         for (var i = 0; i < CMD_ARGS.length; i++){
-        if(CMD_ARGS[i].indexOf("--cordova-path") !== -1) {
-            CMD_ARGS.splice(i, 1);
-            continue;
+            if(CMD_ARGS[i].indexOf("--cordova-path") !== -1) {
+                CMD_ARGS.splice(i, 1);
+                continue;
+            }
+            if(CMD_ARGS[i].indexOf("--plugins-path") !== -1) {
+                CMD_ARGS.splice(i, 1);
+                continue;
+            }
+            if(CMD_ARGS[i].indexOf("cloud") !== -1) {
+                CMD_ARGS.splice(i, 1);
+                continue;
+            }
         }
-        if(CMD_ARGS[i].indexOf("--plugins-path") !== -1) {
-            CMD_ARGS.splice(i, 1);
-            continue;
-        }
-    }
-    return CMD_ARGS;
+        return CMD_ARGS;
     }
 
     module.exports = utils;

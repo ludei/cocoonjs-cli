@@ -1,26 +1,36 @@
 var shell = require('shelljs'),
     util = require('../../utils.js');
 
-function CreateCommand(cmd, command) {
-    
-    var command_list = command.split(" ");
+function CreateCommand(CliManager, callback) {
+
+    var command_list = CliManager.getArgv(CliManager.ARGV.RAW);
+    var cmd     = CliManager.getCMD();
+    var command = CliManager.getArgv(CliManager.ARGV.AS_STRING);
+
+
     if(command_list.length === 1){
-        util.log("At least the dir must be provided to create new project. See `cocoonjs --help`.");
-        return;
+        throw new Error("At least the dir must be provided to create new project. See `cocoonjs --help`.");
     }else{
         util.log("Executing command '" + command + "'");
     }
-
+    var stdout = "";
+    var stderr = "";
     var result = cmd.execAsync(command, {
     	events : {
             stdout : function(data){
-            	util.log(data);
+                stdout += data;
+            	if(!callback) util.log(data);
             },
             stderr : function(data){
-            	util.log(data);
+                stderr += data;
+                if(!callback) util.log(data);
             },
             exit : function(status){
-            	process.exit(status);
+                if(callback){
+                    callback(stdout, stderr, status);
+                }else{
+                    process.exit(status);
+                }
             }
         }
     });

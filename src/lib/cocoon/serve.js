@@ -13,16 +13,21 @@ var shell 	= require('shelljs'),
     mime = require('mime'),
     config_xml;
 
-function LiveReload(cmd, command, argv) {
+var CliManager;
+function LiveReload(manager) {
+    CliManager = manager;
+
+    var command = CliManager.getArgv( CliManager.ARGV.AS_STRING );
+
 	util.log("Executing command '" + command + "'");
 
-    this.cmd = cmd;
+    this.cmd = CliManager.getCMD();
 
     util.log("A 'cordova prepare' is needed before executing 'cordova serve'.");
     // Prepare the project before serving it.
     var prepare = this.cmd.exec("prepare", { silent : false });
     if(prepare.code !== 0){
-        util.errorLog("Error executing 'cordova prepare'.");
+        util.errorLog("Error executing 'cordova prepare'. " + prepare.output);
         process.exit(0);
     }
 
@@ -188,7 +193,7 @@ LiveReload.prototype.init = function(){
     util.log("Path: " + root);
     util.log("CTRL + C to shut down");
 
-    if(argv.qrcode) qrcode.generate(server_url);
+    if( CliManager.getArgv( CliManager.ARGV.RAW )['qrcode'] ) qrcode.generate(server_url);
 };
 
 module.exports = LiveReload;

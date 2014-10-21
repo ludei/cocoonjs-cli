@@ -1,14 +1,13 @@
 var parse_arguments = null,
 	fs              = require('fs'),
     path            = require('path'),
-    util            = require('./utils.js'),
-    q               = null;
+    util            = require('./utils.js');
+var argv;
 
 module.exports = function CLI(args) {
 	
     try{
         parse_arguments = require('minimist');
-        q = require('q');
     }catch(e){
         console.error("Oooops, Did you forgot to run 'npm install'? Execute the following commands: \n",
             "$ cd " + path.dirname(__dirname) + "\n",
@@ -18,6 +17,13 @@ module.exports = function CLI(args) {
 
 	argv = parse_arguments(args);
 
+    if(argv["_"]){
+        for(var prop in argv["_"]){
+            argv[prop] = argv["_"][prop];
+        }
+        delete argv["_"];
+    }
+
     var options = {
         verboseEnabled : false,
         command : args
@@ -26,8 +32,8 @@ module.exports = function CLI(args) {
     if(args.length === 0){
         return util.log('No valid command found. Try --help for a list of all the available commands.');
     }
-	
-    if (argv.help) {
+
+    if (argv.help || argv[1] && argv[1] === "help") {
 		return util.printHelpInfo();
     }
 

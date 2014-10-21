@@ -29,7 +29,6 @@
     "html5"
   ],
   "dependencies": {
-    "q": "1.0.1",
     "shelljs": "0.3.0",
     "minimist": "0.1.0",
     "colors": "0.6.2",
@@ -39,7 +38,11 @@
     "tiny-lr": "0.0.7",
     "qrcode-terminal" : "0.9.5",
     "ip" : "0.3.1",
-    "mime" : "1.2.11"
+    "prompt" : "0.2.14",
+    "mime" : "1.2.11",
+    "cocoonjs-cloud-api" : "0.1.0",
+    "cli-table" : "0.3.0",
+    "async" : "0.9.0"
   },
   "author": "Carlos Hernández Gómez - @k4rliky",
   "contributors": [

@@ -2,25 +2,18 @@ var shell 	= require('shelljs'),
 	fs 		= require('fs'),
 	path 	= require('path'),
 	util 	= require('../utils.js');
+var CliManager = null;
 
 function CordovaLib(argv, options) {
-
-	this._argv 		= argv;										// Optional arguments like --cordova-path or --plugins-path
-	this._args 		= util.cleanUpArguments(options.command);	// Cordova command and flags
-	this._argsStr 	= this._args.join(" ");						// Cordova command and flags as string
-	this._cmdPath	= util.getCordovaCMD(argv); 					// Path to the Cordova CLI executable
-	this._cmd 		= null;
-	this._options 	= options;
-
-	this.init();
+    CliManager = new (require("./CliManager.js"))(argv, options);
+    this.init();
 };
 
 CordovaLib.prototype.init = function(){
-	
 	shell.exec("cd " + process.cwd());
-	
-	var CommandLib = this.getCordovaLib(this._args[0]);
-	this._cmd = new (require('./cmd.js'))(this._cmdPath, this._options);
+
+    var CommandLib = CliManager.getCordovaLib(CliManager.getArgv()[0]);
+	this._cmd = CliManager.getCMD();
 
 	var req_results = this.checkRequirements();
 	if(req_results.code !== 0){
@@ -30,26 +23,15 @@ CordovaLib.prototype.init = function(){
 		return;
 	}
 
-	new CommandLib(this._cmd, this._argsStr, this._argv);
+	new CommandLib(CliManager);
 };
 
 CordovaLib.prototype.checkRequirements = function(){
-	
 	var options = {
 		silent : true
 	};
 
 	return this._cmd.exec(" --version", options);
-};
-
-CordovaLib.prototype.getCordovaLib = function(command){
-	var lib_path = path.join(__dirname , "cordova" , command + ".js");
-
-	if(fs.existsSync(lib_path)){
-		return require(lib_path);
-	}else{
-		return require("./cordova/generic.js");
-	}
 };
 
 module.exports = CordovaLib;
