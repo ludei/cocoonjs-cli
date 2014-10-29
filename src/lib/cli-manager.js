@@ -65,6 +65,9 @@ CliManager.prototype.setCustomArgv = function(argv){
 CliManager.prototype.toogleCustomArgv = function(bool){
     this._customArgvEnabled = bool;
 }
+CliManager.prototype.isCustomArgvActive = function(){
+    return this._customArgvEnabled;
+}
 /**
  *
  * @param argv
@@ -108,13 +111,19 @@ CliManager.prototype.getCordovaLib = function(command){
     if(fs.existsSync(lib_path)){
         return require(lib_path);
     }else{
-        return require("./cordova/generic.js");
+        return false;
     }
 }
 /**
  *
  */
-CliManager.prototype.getCloudLib = function(){
+CliManager.prototype.getCloudLib = function(command){
+    var lib_path = path.join(__dirname , "cloud" , command + ".js");
 
+    if(fs.existsSync(lib_path)){
+        return require(lib_path);
+    }else{
+        return false;
+    }
 }
 module.exports = CliManager;

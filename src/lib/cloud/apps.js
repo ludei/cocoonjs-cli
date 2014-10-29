@@ -6,7 +6,14 @@ var Table   = require('cli-table');
 var CocoonJSCloud  = require('cocoonjs-cloud-api');
 var CliManager;
 
-function Apps(Cloud, manager) {
+/**
+ *
+ * @param Cloud
+ * @param manager
+ * @param callback optional
+ * @constructor
+ */
+function Apps(Cloud, manager, callback) {
 
     CliManager = manager;
 
@@ -17,13 +24,17 @@ function Apps(Cloud, manager) {
     var credentials = Cloud.loadCredentials();
 
     if(!credentials){
-        util.errorLog("You have to log in first, see 'cocoonjs cloud login'. ");
-        process.exit(1);
+        throw new Error("You have to log in first, see 'cocoonjs cloud login'.");
     }
 
     this.api = new CocoonJSCloud.API(credentials);
 
-    this.api.get('/project', function (err, data) {
+    var appId = "";
+    if(CliManager.isCustomArgvActive()){
+        appId = "/" + CliManager.getCustomArgv( CliManager.ARGV.RAW )[1];
+    }
+
+    this.api.get('/project' + appId, function (err, data) {
         if(err){
             util.errorLog(err.message);
             return;
@@ -31,6 +42,15 @@ function Apps(Cloud, manager) {
 
         if(data.length === 0){
             util.log("No projects found, you will need to create one, see 'cocoonjs cloud create'.");
+        }
+
+        /**
+         * Notify through this callback
+         * the completion of this request.
+         */
+        if(callback){
+            callback(data);
+            return;
         }
 
         /**
@@ -42,7 +62,7 @@ function Apps(Cloud, manager) {
         }
 
         /**
-         * Pretty prints a table :)
+         * 'Pretty prints' a table :)
          * @type {Table}
          */
         var table = new Table({

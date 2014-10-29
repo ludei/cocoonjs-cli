@@ -64,7 +64,7 @@ Cmd.prototype.execAsync = function(command, options) {
     }
 
     //Spawn command needs command and args passed as array
-    var tempArr = complete_command.split(' ');
+    var tempArr = complete_command.match(/"[^"]*"|'[^']*'|\S+/g);
     var command = tempArr[0];
     tempArr.shift()
     var args = tempArr;

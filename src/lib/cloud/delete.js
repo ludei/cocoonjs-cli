@@ -9,7 +9,7 @@ var CocoonJSCloud  = require('cocoonjs-cloud-api');
 var CliManager;
 
 /**
- * Deletes a remote project
+ * Deletes a project in the cloud compiler
  * @param cmd
  * @param actions
  * @param Cloud
@@ -22,22 +22,20 @@ function Delete(Cloud, manager) {
     var package = CliManager.getArgv( CliManager.ARGV.RAW )[2];
 
     if(!package){
-        util.errorLog("Missing argument 'package', see 'cocoonjs cloud' .");
-        return;
+        throw new Error("Missing argument 'package', see 'cocoonjs cloud'.");
     }
 
     this.credentials = Cloud.loadCredentials();
 
     if(!this.credentials){
-        util.errorLog("You have to log in first, see 'cocoonjs cloud login'. ");
-        return;
+        throw new Error("You have to log in first, see 'cocoonjs cloud'.");
     }
 
     this.api = new CocoonJSCloud.API(this.credentials);
 
     this.api.del('/project/' + package, function(err, data) {
         if(err){
-            throw new Error(err);
+            throw new Error(err.message);
         }
         util.log("Project deleted successfully from www.cocoonjs.com.");
     });

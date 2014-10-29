@@ -37,8 +37,8 @@ function Create(Cloud, manager) {
 
     util.log("creating a new project at", this._command[2]);
 
-    var Lib = CliManager.getCordovaLib(this._command[1]);
-    if(!Lib){
+    var CreateLib = CliManager.getCordovaLib(this._command[1]);
+    if(!CreateLib){
         util.errorLog("Cannot find 'cocoonjs create' library."); // This should never happen lol wut
     }
 
@@ -79,12 +79,18 @@ function Create(Cloud, manager) {
             throw new Error(err);
         }
 
-        var customArgv = ["create", commandList.path, commandList.package, commandList.name];
+        var customArgv = ["create", commandList.path, commandList.package, '"' + commandList.name + '"'];
+
+        var copyFrom = CliManager.getArgv()['copy-from'];
+        if(copyFrom){
+            customArgv.push("--copy-from=" + copyFrom);
+        }
+
         CliManager.setCustomArgv(customArgv);
         CliManager.toogleCustomArgv(true);
 
         // Executes '$ cocoonjs create {/path/} {package} {name}'
-        new Lib(CliManager, function(stdout, stderr, statusCode){
+        new CreateLib(CliManager, function(stdout, stderr, statusCode){
             if(statusCode !== 0){
                 util.errorLog(stderr);
                 return;
@@ -134,7 +140,7 @@ Create.prototype.getPrompt = function(objReference, name, description, callback)
         { name: name, description: description, required: true }
     ], function (err, result) {
         if (err) {
-            callback(err);
+            callback(err.message);
             return;
         }
 

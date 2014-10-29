@@ -5,7 +5,7 @@ var shell 	= require('shelljs'),
 var CliManager = null;
 
 function CocoonLib(argv, options) {
-    CliManager = new (require("./CliManager.js"))(argv, options);
+    CliManager = new (require("./cli-manager.js"))(argv, options);
     this.init();
 };
 

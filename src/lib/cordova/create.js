@@ -7,14 +7,15 @@ function CreateCommand(CliManager, callback) {
     var cmd     = CliManager.getCMD();
     var command = CliManager.getArgv(CliManager.ARGV.AS_STRING);
 
-
     if(command_list.length === 1){
         throw new Error("At least the dir must be provided to create new project. See `cocoonjs --help`.");
     }else{
         util.log("Executing command '" + command + "'");
     }
+
     var stdout = "";
     var stderr = "";
+
     var result = cmd.execAsync(command, {
     	events : {
             stdout : function(data){
