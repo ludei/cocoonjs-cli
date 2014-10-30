@@ -86,7 +86,6 @@ Clone.prototype.createLocalProject = function(CreateLib, projectInfo, path){
             throw new Error(stderr);
         }
 
-        util.log("Project '" + projectInfo.title + "' cloned correctly into " + path);
         me.updateProjectSettings(projectInfo, path);
     });
 }
@@ -101,8 +100,12 @@ Clone.prototype.updateProjectSettings = function (projectInfo, path) {
             throw new Error(err);
         }
 
-        configManager.setValue(configAsXML, "app_version", "3.0.0");
-        console.log(configAsXML);
+        configManager.setValue("app_version", projectInfo.version);
+        configManager.saveConfig();
+
+        util.log("Your config.xml '" + configManager.config_xml_path + "' has been updated with its project information.");
+        util.log("Project configuration '" + projectInfo.title + "' cloned correctly into " + path);
+
     });
 }
 
