@@ -11,13 +11,13 @@ ConfigManager.prototype.getConfigXMLPath = function(workingPath){
     var project_path    = workingPath;
     var config_path     = path.join(project_path, "config.xml");
 
-    if( fileExists(config_path) ){
-        return fs.readFileSync(config_path).toString('UTF-8');
-    };
+    if( fs.existsSync(config_path) ){
+        return config_path;
+    }
 
     config_path = path.join(project_path, "www","config.xml");
-    if( fileExists(config_path) ){
-        return fs.readFileSync(config_path).toString('UTF-8');
+    if( fs.existsSync(config_path) ){
+        return config_path;
     }
 
     return false;
@@ -37,17 +37,27 @@ ConfigManager.prototype.readConfigXML = function(workingPath, callback){
         callback("Can't find your config.xml at the given path " + workingPath, null);
     }
 
-    var content = fs.readFileSync( config_xml_path ).toString('UTF-8');
-    parser.parseString(content, function(data){
-        callback(null, data);
+    var configAsXml = fs.readFileSync( config_xml_path ).toString('UTF-8');
+    parser.parseString(configAsXml, function(err, configAsObj){
+        callback(err, configAsObj, configAsXml);
     });
 };
 
-ConfigManager.prototype.setValue = function(section, value){
+ConfigManager.prototype.setValue = function(xml, section, value){
+
+    if (!xml){
+        throw new Error("No XML Provided.");
+    }
+
+    switch ( section ) {
+        case "app_version":
+
+        break;
+    }
 
 };
 
-ConfigManager.prototype.getValue = function(section, value){
+ConfigManager.prototype.getValue = function(xml, section, value){
 
 };
 
