@@ -4,14 +4,18 @@ var shell 	= require('shelljs'),
 	util 	= require('../../utils.js');
 var fileExists = fs.existsSync;
 
-function CordovaPlugin(cmd, command, argv) {
+function CordovaPlugin(CliManager, callback) {
+
+    var cmd     = CliManager.getCMD();
+    var command = CliManager.getArgv(CliManager.ARGV.AS_STRING);
+
 	util.log("Executing command '" + command + "'");
 
 	var ctx = this;
 	this._commands = command;
 	this._commands_list = command.split(" ");
 	this._cmd = cmd;
-	this._argv = argv;
+
 	this._config_xml = {};
 	this.ludei_plugins = [];
 	util.getConfigXML(function(err, data){

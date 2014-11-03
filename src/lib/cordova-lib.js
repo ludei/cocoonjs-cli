@@ -23,6 +23,12 @@ CordovaLib.prototype.init = function(){
 		return;
 	}
 
+    if(!CommandLib){
+        util.errorLog("Could not execute the command '" + CliManager.getArgv()[0] + "'.");
+        util.errorLog("The command because it's not available as a cordova library.");
+        return;
+    }
+
 	new CommandLib(CliManager);
 };
 

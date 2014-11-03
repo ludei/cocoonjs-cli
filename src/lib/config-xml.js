@@ -7,9 +7,8 @@ function ConfigManager() {
 
 }
 
-ConfigManager.prototype.getConfigXMLPath = function(workingPath){
-    var project_path    = workingPath;
-    var config_path     = path.join(project_path, "config.xml");
+ConfigManager.prototype.getConfigXMLPath = function(project_path){
+    var config_path = path.join(project_path, "config.xml");
 
     this.xml = "";
     this.config_xml_path = "";
@@ -61,8 +60,16 @@ ConfigManager.prototype.setValue = function(section, value){
 
 };
 
-ConfigManager.prototype.getValue = function(xml, section, value){
+ConfigManager.prototype.getValue = function(section){
+    if (!this.xml){
+        throw new Error("You have to call .readConfigXML(); before getting a value.");
+    }
 
+    switch ( section ) {
+        case "package":
+            return this.xml.match(/id="([^"]*)"/)[1];
+            break;
+    }
 };
 
 ConfigManager.prototype.saveConfig = function(){

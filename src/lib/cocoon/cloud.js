@@ -42,7 +42,18 @@ Cloud.prototype.loadCredentials = function(){
     var content = fs.readFileSync(credentialsPath, "utf-8");
     return JSON.parse(content);
 };
-
+Cloud.prototype.getLudeiPlugins = function(){
+    var plugins = [{
+        isView : true,
+        name : "webview+",
+        package : "com.ludei.webview.plus"
+    },{
+        isView : true,
+        name : "canvas+",
+        package : "com.ludei.canvas.plus"
+    }];
+    return plugins;
+}
 /**
  *
  * @returns {*}

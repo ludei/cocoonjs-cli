@@ -3,7 +3,6 @@ var path 	= require('path');
 var fs 		= require('fs');
 var util 	= require('../../utils.js');
 var Table   = require('cli-table');
-var CocoonJSCloud  = require('cocoonjs-cloud-api');
 var ConfigManager  = require('../config-xml.js');
 var CliManager;
 

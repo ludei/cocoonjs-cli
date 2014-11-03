@@ -107,11 +107,12 @@ CliManager.prototype.getCocoonLib = function(command){
  */
 CliManager.prototype.getCordovaLib = function(command){
     var lib_path = path.join(__dirname , "cordova" , command + ".js");
+    var generic_path = path.join(__dirname , "cordova" , "generic.js");
 
     if(fs.existsSync(lib_path)){
         return require(lib_path);
     }else{
-        return false;
+        return require(generic_path);
     }
 }
 /**
@@ -126,4 +127,28 @@ CliManager.prototype.getCloudLib = function(command){
         return false;
     }
 }
+
+/**
+ *
+ */
+CliManager.prototype.getAvailablePlatforms = function(){
+    var platforms_path = path.join( process.cwd() , "platforms");
+    var directories = [];
+    var directory_content = fs.readdirSync(platforms_path);
+    var length = directory_content.length;
+
+    for(var x = 0; x < length; x++){
+        var file = directory_content[x];
+        if(file === "cocoonjs"){
+            continue;
+        }
+        var stats = fs.statSync( path.join(platforms_path, file) );
+        if(stats.isDirectory()){
+            directories.push(file);
+        }
+    }
+
+    return directories;
+}
+
 module.exports = CliManager;
