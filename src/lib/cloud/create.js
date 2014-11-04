@@ -55,7 +55,7 @@ function Create(Cloud, manager) {
     async.waterfall([
         function(callback){
             if(!commandList.path){
-                me.getPrompt(commandList, 'path', 'Path to your new CocoonJS project (absolute path)', callback);
+                me.getPrompt(commandList, 'path', 'Local path to your new CocoonJS project (absolute path)', callback);
             }else{
                 callback(null);
             }

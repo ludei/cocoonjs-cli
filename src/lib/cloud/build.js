@@ -76,10 +76,11 @@ Build.prototype.build = function(filePath){
             throw new Error(err);
         }
 
-        util.log("Uploading project '" + package + "' to www.cocoonjs.com");
-
         var package = configManager.getValue("package");
         var platforms = me.CliManager.getAvailablePlatforms();
+        var plugins = me.CliManager.getAvailablePlugins();
+
+        util.log("Uploading project '" + package + "' to CocoonJS' Cloud Compiler.");
 
         var options = {
             form: {
@@ -97,7 +98,18 @@ Build.prototype.build = function(filePath){
             viewHelp += "will be compiled with the '" + view + "' execution environment,";
             viewHelp += "see 'cocoonjs environments' for more info.";
 
+        var pluginHelp = "";
+        if(plugins.length === 0){
+            pluginHelp += "Your project does not have installed plugins.";
+        }else{
+            pluginHelp += "Plugins that will be compiled with your project:\n";
+            for(var x = 0; x < plugins.length; x++){
+                pluginHelp += plugins[x] + "\n";
+            }
+        }
+
         util.log(viewHelp);
+        util.log(pluginHelp);
 
         me.api.post('/project/' + package + '/compile', options, function(err, data) {
             if(err){

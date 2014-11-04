@@ -8,7 +8,20 @@ var shell 	= require('shelljs'),
  */
 function CliManager(argv, options){
 
-    this._argv 		= argv;							            // Optional arguments like --cordova-path or --plugins-path
+    this._argv = (function(argv){ // Optional arguments like --cordova-path or --plugins-path
+        var arr = [];
+        for(var prop in argv){
+            var key = prop;
+            var value = argv[key];
+            if( isNaN( parseInt(key) ) ){
+                arr[key] = value;
+            }else{
+                arr.push(value);
+            }
+        }
+        return arr;
+    })(argv);
+
     this._args 		= util.cleanUpArguments(options.command);	// Cordova command and flags
     this._argsStr 	= this._args.join(" ");						// Cordova command and flags as string
     this._customArgvEnabled = false;
@@ -151,4 +164,23 @@ CliManager.prototype.getAvailablePlatforms = function(){
     return directories;
 }
 
+/**
+ *
+ */
+CliManager.prototype.getAvailablePlugins = function(){
+    var plugins_path = path.join( process.cwd() , "plugins");
+    var directories = [];
+    var directory_content = fs.readdirSync(plugins_path);
+    var length = directory_content.length;
+
+    for(var x = 0; x < length; x++){
+        var file = directory_content[x];
+        var stats = fs.statSync( path.join(plugins_path, file) );
+        if(stats.isDirectory()){
+            directories.push(file);
+        }
+    }
+
+    return directories;
+}
 module.exports = CliManager;

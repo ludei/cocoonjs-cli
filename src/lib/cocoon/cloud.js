@@ -14,7 +14,7 @@ function Cloud(manager) {
     var actions = CliManager.getArgv( CliManager.ARGV.RAW );
     var command = CliManager.getArgv( CliManager.ARGV.AS_STRING );
 
-    if(actions[0] === "cloud" && actions.length <= 1 ){
+    if(actions[0] === "cloud" && actions.length === 1 ){
         util.printHelpInfo("cloud.txt");
         return;
     }

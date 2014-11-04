@@ -2,15 +2,33 @@ Synopsis
 
     cocoonjs cloud [options]
 
+Project-Level Commands
+
+    login                     ................ login to CocoonJS' Cloud compiler
+    logout                    ................ logout of CocoonJS' Cloud compiler
+    create <PATH> [ID] [NAME] ................ Creates a CocoonJS project in the cloud compiler in the specified PATH, with
+                                               optional [NAME] and [ID] (reverse-domain-style package name)
+    build                     ................ Compresses your www/ and plugins/ folders and uploads them to be compiled
+                                               in the cloud compiler.
+    clone <PATH> [ID]         ................ Clone a remote project into a local folder. The [ID] of your project
+    delete                    ................ Deletes the remote project and local files, this operation can't be undone.
+                                               You'll be asked for confirmation a no ser que pases --force
+    apps                      ................ Shows the information of all your apps, use --raw-mode to show the information
+                                               as an array.
+
 Command-line Flags/Options
 
-    -v, --version ............................. prints out this utility's version
     -d, --verbose ............................. debug mode produces verbose log output for all activity,
                                                 including output of sub-commands cordova/cocoonjs invokes
 
 Example usage
 
-    $ cocoonjs cloud
+    Example 1:
+        $ cocoonjs cloud create
+    Example 2 (Clone a remote project into your computer):
+        $ cocoonjs cloud clone com.your.project.id
+    Example 3:
+        $ cocoonjs apps
 
 Documentation
 	http://support.ludei.com
