@@ -178,12 +178,22 @@ LiveReload.prototype.init = function(){
       });
     });
 
-    gulp.task('html', function () {
-      gulp.src( path.join(root,'/*.html') ).pipe(gulp_connect.reload());
+    gulp.task('reload_html', function () {
+      gulp.src( path.join(root,'/**/*.html') ).pipe(gulp_connect.reload());
+    });
+
+    gulp.task('reload_styles', function () {
+      gulp.src( path.join(root,'/**/*.css') ).pipe(gulp_connect.reload());
+    });
+
+    gulp.task('reload_code', function () {
+      gulp.src( path.join(root,'/**/*.js') ).pipe(gulp_connect.reload());
     });
 
     gulp.task('watch', function () {
-      gulp.watch([ path.join(root,'/*.html') ], ['html']);
+      gulp.watch([ path.join(root,'/**/*.html') ], ['reload_html']);
+      gulp.watch([ path.join(root,'/**/*.css') ], ['reload_styles']);
+      gulp.watch([ path.join(root,'/**/*.js') ], ['reload_code']);
     });
 
     gulp.task('default', ['connect', 'watch']);
