@@ -87,7 +87,7 @@ Build.prototype.build = function(filePath){
                 file: filePath,
                 data: {
                     "view": view,
-                    "version": "default", // TODO change this value to 'latest' when possible
+                    "version": "default",
                     "platforms" : platforms
                 }
             }

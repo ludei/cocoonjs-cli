@@ -31,7 +31,6 @@ function Clone(Cloud, manager) {
         throw new Error("Cannot find 'cocoonjs create' library."); // This should never happen lol wut
     }
 
-    // TODO configure ARGV
     var package = CliManager.getArgv( CliManager.ARGV.RAW )[2];
     if (!package){
         throw new Error("Missing argument package.");

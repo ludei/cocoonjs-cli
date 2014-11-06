@@ -31,7 +31,6 @@ function Login(Cloud, manager) {
     util.log("CocoonJS Cloud Login");
     util.log("Sign up at www.cocoonjs.com/register");
 
-    // TODO: Skip this if the user is already logged in
     prompt.get([
         {
             name: 'username',
