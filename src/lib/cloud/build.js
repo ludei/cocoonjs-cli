@@ -134,7 +134,7 @@ Build.prototype.getView = function(){
     var LudeiPlugins = this.Cloud.getLudeiPlugins();
 
     for(var i = 0; i < LudeiPlugins.length; i++){
-        if(pluginsInstalled.indexOf(LudeiPlugins[i].name) > -1){
+        if(pluginsInstalled.indexOf(LudeiPlugins[i].package) !== -1){
             return LudeiPlugins[i].name;
         }
     }
