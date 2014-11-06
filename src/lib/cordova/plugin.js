@@ -8,7 +8,8 @@ function CordovaPlugin(CliManager, callback) {
 
     var cmd     = CliManager.getCMD();
     var command = CliManager.getArgv(CliManager.ARGV.AS_STRING);
-
+    this._argv  = CliManager.getArgv( CliManager.ARGV.RAW );
+	
 	util.log("Executing command '" + command + "'");
 
 	var ctx = this;
