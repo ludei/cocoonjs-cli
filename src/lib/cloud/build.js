@@ -34,13 +34,14 @@ Build.prototype.compressProject = function(){
     var outputFile = "cloud.zip";
     var pluginsPath = path.join(process.cwd(), "plugins");
     var srcPath = path.join(process.cwd(), "www");
-    var output = fs.createWriteStream(path.join( outputPath , outputFile));
     var zipArchive = archiver('zip');
     var me = this;
 
     if( !fs.existsSync(outputPath) ) {
         shell.mkdir("-p", outputPath);
     }
+
+    var output = fs.createWriteStream(path.join( outputPath , outputFile));
 
     output.on('close', function() {
         me.build( path.join(outputPath, outputFile) );
