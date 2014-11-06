@@ -8,9 +8,8 @@ var CocoonJSCloud  = require('cocoonjs-cloud-api');
 var CliManager;
 /**
  * Created a local project and a remote one.
- * @param cmd
- * @param actions
  * @param Cloud
+ * @param manager
  * @constructor
  */
 function Create(Cloud, manager) {
@@ -20,7 +19,6 @@ function Create(Cloud, manager) {
 
     this._cmd = CliManager.getCMD();
     this._command = CliManager.getArgv( CliManager.ARGV.RAW );
-    this._project_path = this._command[1];
     this.credentials = Cloud.loadCredentials();
 
     if(!this.credentials){
@@ -80,7 +78,6 @@ function Create(Cloud, manager) {
         }
 
         var customArgv = ["create", commandList.path, commandList.package, '"' + commandList.name + '"'];
-
         var copyFrom = CliManager.getArgv()['copy-from'];
         if(copyFrom){
             customArgv.push("--copy-from=" + copyFrom);
@@ -114,13 +111,13 @@ Create.prototype.createCloudProject = function(CliManager, argv){
 
     var options = {
         form: {
-            "title": argv[3],
-            "package": argv[2],
+            "title": argv[2],
+            "package": argv[1],
             "version": "0.0.1"
         }
     };
 
-    this.api.post('/project', options, function(err, data) {
+    this.api.post('/project', options, function(err) {
         if(err){
             throw new Error(err)
         }
@@ -149,6 +146,6 @@ Create.prototype.getPrompt = function(objReference, name, description, callback)
             callback(null);
         }
     });
-}
+};
 
 module.exports = Create;
