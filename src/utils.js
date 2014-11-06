@@ -48,19 +48,20 @@ var fileExists = fs.existsSync;
         var project_path    = process.cwd();
         var config_path     = path.join(project_path, "config.xml");
         var parser          = new xml2js.Parser();
+        var data;
 
         if( fileExists(config_path) ){
-            var data = fs.readFileSync(config_path).toString('UTF-8');
+            data = fs.readFileSync(config_path).toString('UTF-8');
             parser.parseString(data, callback);
             return;
-        };
+        }
 
         config_path = path.join(project_path, "www","config.xml");
         if( fileExists(config_path) ){
-            var data = fs.readFileSync(config_path).toString('UTF-8');
+            data = fs.readFileSync(config_path).toString('UTF-8');
             parser.parseString(data, callback);
             return;
-        };
+        }
 
         return callback(false);
     };
@@ -69,7 +70,7 @@ var fileExists = fs.existsSync;
      * Checks if this platform ready to manage cordova compilations, also returns
      * the cordova version.
      */
-    utils.getCordovaVersion = function(cmd, callback){
+    utils.getCordovaVersion = function(cmd){
         var isAvailable = utils.isCordovaAvailable(cmd);
         if(isAvailable){
             return isAvailable.output.replace(/(\r\n|\n|\r)/gm,"");
@@ -97,7 +98,7 @@ var fileExists = fs.existsSync;
                     if(arguments[i].hasOwnProperty(key))
                         arguments[0][key] = arguments[i][key];
         return arguments[0];
-    }
+    };
 
     /**
      * Utility log function
@@ -124,7 +125,7 @@ var fileExists = fs.existsSync;
                     platforms.push(dir_content[i]);
                     platforms[dir_content[i]] = true;
                 }
-            };
+            }
         }
 
         return platforms;
@@ -144,7 +145,7 @@ var fileExists = fs.existsSync;
         }
 
         return path;
-    }
+    };
 
     utils.errorLog = function(){
         var args = Array.prototype.slice.call(arguments).join(" ");
@@ -165,13 +166,13 @@ var fileExists = fs.existsSync;
                 CMD_ARGS.splice(i, 1);
                 continue;
             }
-            if(CMD_ARGS[i].indexOf("cloud") !== -1) {
+            if(CMD_ARGS[i] === "cloud") {
                 CMD_ARGS.splice(i, 1);
-                continue;
+                // continue; is unnecessary as the last statement in a loop
             }
         }
         return CMD_ARGS;
-    }
+    };
 
     module.exports = utils;
 })();
