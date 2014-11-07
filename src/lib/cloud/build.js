@@ -82,7 +82,7 @@ Build.prototype.build = function(filePath){
         var plugins = me.CliManager.getAvailablePlugins();
 
         util.log("Uploading project '" + package + "' to CocoonJS' Cloud Compiler.");
-
+        var view = me.getView();
         var options = {
             form: {
                 file: filePath,
@@ -94,7 +94,6 @@ Build.prototype.build = function(filePath){
             }
         };
 
-        var view = me.getView();
         var viewHelp = "The project '" + package + "' ";
             viewHelp += "will be compiled with the '" + view + "' execution environment,";
             viewHelp += "see 'cocoonjs environments' for more info.";
