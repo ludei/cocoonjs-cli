@@ -49,6 +49,10 @@ Cloud.prototype.getLudeiPlugins = function(){
         package : "com.ludei.webview.plus"
     },{
         isView : true,
+        name : "webview+",
+        package : "com.ludei.ios.webview.plus"
+    },{
+        isView : true,
         name : "canvas+",
         package : "com.ludei.canvas.plus"
     }];
