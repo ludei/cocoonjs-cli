@@ -11,15 +11,15 @@ Project-Level Commands
     build                     ................ Compresses your www/ and plugins/ folders and uploads them to be compiled
                                                in the cloud compiler.
     clone <PATH> [ID]         ................ Clone a remote project into a local folder. The [ID] of your project
-    delete                    ................ Deletes the remote project and local files, this operation can't be undone.
-                                               You'll be asked for confirmation a no ser que pases --force
+    delete                    ................ Deletes the remote project (not the local files), this operation cannot be undone.
+                                               You'll be asked for confirmation unless you pass the --force argument.
     apps                      ................ Shows the information of all your apps, use --raw-mode to show the information
                                                as an array.
 
 Command-line Flags/Options
 
     -d, --verbose ............................. debug mode produces verbose log output for all activity,
-                                                including output of sub-commands cordova/cocoonjs invokes
+                                                including output of sub-commands cordova/cocoonjs invokes.
 
 Example usage
 

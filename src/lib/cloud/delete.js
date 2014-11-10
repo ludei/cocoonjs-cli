@@ -5,6 +5,7 @@ var shell 	= require('shelljs');
 var path 	= require('path');
 var fs 		= require('fs');
 var util 	= require('../../utils.js');
+var prompt  = require('prompt');
 var CocoonJSCloud  = require('cocoonjs-cloud-api');
 var CliManager;
 
@@ -19,9 +20,9 @@ function Delete(Cloud, manager) {
 
     CliManager = manager;
     var me = this;
-    var package = CliManager.getArgv( CliManager.ARGV.RAW )[2];
+    this.package = CliManager.getArgv( CliManager.ARGV.RAW )[2];
 
-    if(!package){
+    if(!this.package){
         throw new Error("Missing argument 'package', see 'cocoonjs cloud'.");
     }
 
@@ -31,9 +32,34 @@ function Delete(Cloud, manager) {
         throw new Error("You have to log in first, see 'cocoonjs cloud'.");
     }
 
+    if( !CliManager.getArgv(CliManager.ARGV.RAW)["force"] ){
+        prompt.get([
+            {
+                name: 'confirm',
+                description: 'Delete project?[y/n]',
+                required: true
+            }
+        ], function (err, result) {
+            if (err) {
+                console.log("\n" + err);
+                return;
+            }
+            if(result.confirm === "yes" || result.confirm === "y"){
+                me.deleteProject();
+            }else{
+                util.log("User canceled the process.");
+            }
+        });
+    }else{
+        me.deleteProject();
+    }
+
+}
+
+Delete.prototype.deleteProject = function(){
     this.api = new CocoonJSCloud.API(this.credentials);
 
-    this.api.del('/project/' + package, function(err, data) {
+    this.api.del('/project/' + this.package, function(err, data) {
         if(err){
             throw new Error(err.message);
         }
