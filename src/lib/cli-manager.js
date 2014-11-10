@@ -141,6 +141,27 @@ CliManager.prototype.getCloudLib = function(command){
     }
 }
 
+CliManager.prototype.getLudeiPlatforms = function(){
+    var platforms_path = path.join( __dirname, "..", "..", "src", "ludei_platforms.json");
+    return require(platforms_path);
+};
+
+CliManager.prototype.getLudeiPlugins = function(){
+    var plugins = [{
+        isView : true,
+        name : "webview+",
+        package : "com.ludei.webview.plus"
+    },{
+        isView : true,
+        name : "webview+",
+        package : "com.ludei.ios.webview.plus"
+    },{
+        isView : true,
+        name : "canvas+",
+        package : "com.ludei.canvas.plus"
+    }];
+    return plugins;
+};
 /**
  *
  */

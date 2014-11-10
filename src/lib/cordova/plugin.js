@@ -4,7 +4,7 @@ var shell 	= require('shelljs'),
 	util 	= require('../../utils.js');
 var fileExists = fs.existsSync;
 
-function CordovaPlugin(CliManager, callback) {
+function CordovaPlugin(CliManager) {
 
     var cmd     = CliManager.getCMD();
     var command = CliManager.getArgv(CliManager.ARGV.AS_STRING);
@@ -27,7 +27,7 @@ function CordovaPlugin(CliManager, callback) {
 		ctx._config_xml = data;
 		ctx.init();
 	});
-};
+}
 
 CordovaPlugin.prototype.init = function(){
 
@@ -56,7 +56,7 @@ CordovaPlugin.prototype.isLudeiPlugin = function(){
 	
 	for (var i = 0; i < ludei_plugins.length; i++) {
 		if(bundle_id === ludei_plugins[i].plugin_id) return ludei_plugins[i];
-	};
+	}
 
 	return false;
 };
@@ -64,7 +64,6 @@ CordovaPlugin.prototype.isLudeiPlugin = function(){
 CordovaPlugin.prototype.getLudeiPlugins = function(){
 	var plugins_info_path = path.join(__dirname, "../", "../", "ludei_plugins.json");
 	if(fs.existsSync(plugins_info_path)) return require(plugins_info_path).plugins;
-
 	return false;
 };
 
@@ -80,7 +79,7 @@ CordovaPlugin.prototype.executePluginCommand = function(){
 	}
 };
 
-CordovaPlugin.prototype.WebViewPlusReq = function(webview_plus_path){
+CordovaPlugin.prototype.WebViewPlusReq = function(){
 	var result = null;
 	var options = { avoidCordovaCMD : true, silent : true };
 	var command = null;
@@ -145,14 +144,14 @@ CordovaPlugin.prototype.removeWebViewPlus = function(plugin){
 		util.errorLog("Error executing Webview+ hook", hook_path);
 		console.error(exec_result.output);
 		return false;
-	};
+	}
 
 	var plugin_result = this._cmd.exec("plugin rm " + plugin_id);
 	if(plugin_result.code !== 0){
 		util.errorLog("Cannot uninstall the Webview+, failed to execute the command `cocoonjs plugin rm " + plugin_id + "`.");
 		util.errorLog(plugin_result.output);
 		process.exit(plugin_result.code);
-	};
+	}
 
 	try{
 		fs.unlinkSync(hook_path);
@@ -272,7 +271,7 @@ CordovaPlugin.prototype.installHooks = function(hooks_path){
 					fs.renameSync( path.join(full_path, js_file) ,  hook_dest);
 					shell.chmod("+x", hook_dest);
 				}
-			};
+			}
 		}
 	}
 
