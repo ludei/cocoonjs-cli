@@ -111,7 +111,7 @@ Create.prototype.createCloudProject = function(CliManager, argv){
 
     var options = {
         form: {
-            "title": argv[3],
+            "title": argv[3].replace(/['"]+/g, ''),
             "package": argv[2],
             "version": "0.0.1"
         }

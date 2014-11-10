@@ -121,7 +121,12 @@ Build.prototype.build = function(filePath){
         });
     });
 }
-
+/**
+ * CocoonJS uses three diferent views to render apps
+ * Canvas+, Webview+ and System Webview. This function
+ * determines whatever should be used.
+ * @returns {*}
+ */
 Build.prototype.getView = function(){
     var pluginsPath = path.join(this.projectPath, "plugins");
     var pluginsInstalled = fs.readdirSync(pluginsPath);
