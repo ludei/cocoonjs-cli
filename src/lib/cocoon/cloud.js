@@ -9,8 +9,8 @@ var CliManager = null;
  * @constructor
  * @param CliManager
  */
-function Cloud(manager) {
-    CliManager = manager;
+function Cloud(CliManager) {
+
     var actions = CliManager.getArgv( CliManager.ARGV.RAW );
     var command = CliManager.getArgv( CliManager.ARGV.AS_STRING );
 
@@ -26,7 +26,7 @@ function Cloud(manager) {
     }else{
         util.errorLog("Unknown command " + actions[1]);
     }
-};
+}
 
 /**
  *

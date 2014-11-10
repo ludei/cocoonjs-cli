@@ -8,13 +8,11 @@ var CliManager;
 /**
  * Requests a valid token and saves it
  * in ~/.cordova/cocoon.js
- * @param cmd
- * @param actions
  * @param Cloud
- * @constructor
+ * @param CliManager
  */
-function Login(Cloud, manager) {
-    CliManager = manager;
+function Login(Cloud, CliManager) {
+
     var me = this;
     this._cmd = CliManager.getCMD();
     this.Cloud = Cloud;

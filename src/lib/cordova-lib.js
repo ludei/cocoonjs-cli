@@ -7,12 +7,12 @@ var CliManager = null;
 function CordovaLib(argv, options) {
     CliManager = new (require("./cli-manager.js"))(argv, options);
     this.init();
-};
+}
 
 CordovaLib.prototype.init = function(){
 	shell.exec("cd " + process.cwd());
 
-    var CommandLib = CliManager.getCordovaLib(CliManager.getArgv()[0]);
+    var CommandLib = CliManager.getCordovaLib(CliManager.getArgv(CliManager.ARGV.RAW)[0]);
 	this._cmd = CliManager.getCMD();
 
 	var req_results = this.checkRequirements();
@@ -24,7 +24,7 @@ CordovaLib.prototype.init = function(){
 	}
 
     if(!CommandLib){
-        util.errorLog("Could not execute the command '" + CliManager.getArgv()[0] + "'.");
+        util.errorLog("Could not execute the command '" + CliManager.getArgv(CliManager.ARGV.RAW)[0] + "'.");
         util.errorLog("The command because it's not available as a cordova library.");
         return;
     }

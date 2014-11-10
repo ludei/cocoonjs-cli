@@ -71,17 +71,17 @@ Build.prototype.compressProject = function(){
 Build.prototype.build = function(filePath){
     var configManager = new ConfigManager();
     var me = this;
-    configManager.readConfigXML( process.cwd() , function(err, configAsObj, configAsXML) {
+    configManager.readConfigXML( process.cwd() , function(err) {
 
         if (err) {
             throw new Error(err);
         }
 
-        var package = configManager.getValue("package");
+        var bundle = configManager.getValue("package");
         var platforms = me.CliManager.getAvailablePlatforms();
         var plugins = me.CliManager.getAvailablePlugins();
 
-        util.log("Uploading project '" + package + "' to CocoonJS' Cloud Compiler.");
+        util.log("Uploading project '" + bundle + "' to CocoonJS' Cloud Compiler.");
         var view = me.getView();
         var options = {
             form: {
@@ -111,13 +111,13 @@ Build.prototype.build = function(filePath){
         util.log(viewHelp);
         util.log(pluginHelp);
 
-        me.api.post('/project/' + package + '/compile', options, function(err, data) {
+        me.api.post('/project/' + package + '/compile', options, function(err) {
             if(err){
                 throw new Error(err);
             }
 
             util.log("Compilation started...");
-            clearInterval(this.interval);
+            clearInterval(me.interval);
         });
     });
 }

@@ -11,14 +11,11 @@ var CliManager;
 
 /**
  * Deletes a project in the cloud compiler
- * @param cmd
- * @param actions
  * @param Cloud
- * @constructor
+ * @param CliManager
  */
-function Delete(Cloud, manager) {
+function Delete(Cloud, CliManager) {
 
-    CliManager = manager;
     var me = this;
     this.package = CliManager.getArgv( CliManager.ARGV.RAW )[2];
 
@@ -59,7 +56,7 @@ function Delete(Cloud, manager) {
 Delete.prototype.deleteProject = function(){
     this.api = new CocoonJSCloud.API(this.credentials);
 
-    this.api.del('/project/' + this.package, function(err, data) {
+    this.api.del('/project/' + this.package, function(err) {
         if(err){
             throw new Error(err.message);
         }

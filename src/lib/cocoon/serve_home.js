@@ -5,13 +5,13 @@ var util 	= require('../../utils.js'),
 (function(){
     function ServeHome(platforms, config_xml) {
         if(!config_xml) return;
-        this.config_xml = config_xml;
+
         var home_template = fs.readFileSync( path.join(__dirname,"home.html") , "utf-8");
 
         var platforms_template = "";
         for (var i = 0; i < platforms.length; i++) {
             platforms_template += "<li><a href='/"+ platforms[i] +"'>"+ platforms[i] +"</a></li>\n";
-        };
+        }
 
         home_template = home_template.replace("{{platforms}}", platforms_template);
         
@@ -48,33 +48,35 @@ var util 	= require('../../utils.js'),
         home_template = home_template.replace("{{heading_title}}", this.getConfigParam("title").toUpperCase());
 
         this.home_template = home_template;
-    };
+    }
 
     ServeHome.prototype.getConfigParam = function(param){
+        var namespace = "";
+        var ret = [];
         switch (param) {
             case "title":
-                var namespace = "config_xml.widget.name";
-                var ret = this.getValueFromObj(this,namespace);
+                namespace = "config_xml.widget.name";
+                ret = this.getValueFromObj(this,namespace);
                 return (ret[0]) ? ret[0] : "";
             break;
             case "bundle_id":
-                var namespace = "config_xml.widget.$.id";
-                var ret = this.getValueFromObj(this,namespace);
-                return this.config_xml.widget.$.id;
+                namespace = "config_xml.widget.$.id";
+                ret = this.getValueFromObj(this,namespace);
+                return (ret[0]) ? ret[0] : "";
             break;
             case "version":
-                var namespace = "config_xml.widget.$.version";
-                var ret = this.getValueFromObj(this,namespace);
+                namespace = "config_xml.widget.$.version";
+                ret = this.getValueFromObj(this,namespace);
                 return ret;
             break;
             case "description":
-                var namespace = "config_xml.widget.description";
-                var ret = this.getValueFromObj(this,namespace);
+                namespace = "config_xml.widget.description";
+                ret = this.getValueFromObj(this,namespace);
                 return (ret[0]) ? ret[0] : "";
             break;
             case "author":
-                var namespace = "config_xml.widget.author";
-                var ret = this.getValueFromObj(this,namespace);
+                namespace = "config_xml.widget.author";
+                ret = this.getValueFromObj(this,namespace);
                 return (ret[0] && ret[0]["_"]) ? [0]["_"] : "";
             break;
             default:

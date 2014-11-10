@@ -7,13 +7,13 @@ var CliManager = null;
 function CocoonLib(argv, options) {
     CliManager = new (require("./cli-manager.js"))(argv, options);
     this.init();
-};
+}
 
 CocoonLib.prototype.init = function(){
 	
 	shell.exec("cd " + process.cwd());
 		
-	var Lib = CliManager.getCocoonLib(CliManager.getArgv()[0]);
+	var Lib = CliManager.getCocoonLib(CliManager.getArgv(CliManager.ARGV.RAW)[0]);
 
 	if(!Lib){
 		return util.printHelpInfo();

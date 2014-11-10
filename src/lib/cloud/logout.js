@@ -2,12 +2,8 @@ var shell 	= require('shelljs');
 var path 	= require('path');
 var fs 		= require('fs');
 var util 	= require('../../utils.js');
-var CliManager;
 
-function Logout(Cloud, manager) {
-
-    CliManager = manager;
-    var me = this;
+function Logout(Cloud) {
 
     this.Cloud = Cloud;
     this.credentials = Cloud.loadCredentials();

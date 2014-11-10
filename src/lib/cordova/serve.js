@@ -3,7 +3,7 @@ var shell = require('shelljs'),
 
 function ServeCommand(cmd, command) {
     util.log("Executing command '" + command + "'");
-    var result = cmd.execAsync(command, {
+    cmd.execAsync(command, {
     	events : {
             stdout : function(data){
             	util.log(data);

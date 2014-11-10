@@ -83,7 +83,7 @@ CliManager.prototype.isCustomArgvActive = function(){
 }
 /**
  *
- * @param argv
+ * @param mode
  */
 CliManager.prototype.getCustomArgv = function(mode){
     mode = mode || this.ARGV.RAW;
@@ -147,7 +147,7 @@ CliManager.prototype.getLudeiPlatforms = function(){
 };
 
 CliManager.prototype.getLudeiPlugins = function(){
-    var plugins = [{
+    return [{
         isView : true,
         name : "webview+",
         package : "com.ludei.webview.plus"
@@ -160,7 +160,6 @@ CliManager.prototype.getLudeiPlugins = function(){
         name : "canvas+",
         package : "com.ludei.canvas.plus"
     }];
-    return plugins;
 };
 /**
  *

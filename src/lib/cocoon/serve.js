@@ -5,7 +5,6 @@ var shell 	= require('shelljs'),
     gulp    = require('gulp'),
     gulp_connect = require(path.resolve(__dirname,"livereload","connect-index.js")),
     ip  = require('ip'),
-    url = require('url'),
     qrcode = require('qrcode-terminal'),
     me = this,
     root = path.join(process.cwd() , "www"),
@@ -49,13 +48,13 @@ LiveReload.prototype.serveCordovaLibrary = function(res, platform){
     var cordova_lib_path    = path.join(process.cwd() , "platforms", platform, "platform_www", "cordova.js");
     var cordova_lib_content = fs.readFileSync( cordova_lib_path , 'utf-8');
     res.end( cordova_lib_content );
-}
+};
 
 LiveReload.prototype.serveCordovaPlugins = function(res, platform){
     var cordova_plugin_path    = path.join(process.cwd() , "platforms", platform, this.getCordovaPluginsPath(platform), "cordova_plugins.js");
     var cordova_plugin_content = fs.readFileSync( cordova_plugin_path , 'utf-8');
     res.end( cordova_plugin_content );
-}
+};
 
 LiveReload.prototype.getCordovaPluginsPath = function(platform){
     var plugins_path;
@@ -65,7 +64,7 @@ LiveReload.prototype.getCordovaPluginsPath = function(platform){
         plugins_path = "www";
     }
     return plugins_path;
-}
+};
 
 // Middleware for gulp, serves static files and injects livereload snippet in case of inde.html file
 LiveReload.prototype.middlewareCordovaLib = function(req, res, next){
@@ -123,8 +122,6 @@ LiveReload.prototype.middlewareCordovaLib = function(req, res, next){
             res.end( file );
         }
     }
-    return;
-
 };
 
 LiveReload.prototype.getMainHTML = function (platforms){
@@ -172,7 +169,7 @@ LiveReload.prototype.init = function(){
         silent : true,
         port : 8070,
         livereload: true,
-        middleware: function(connect, opt) {
+        middleware: function() {
             return [me.middlewareCordovaLib]
         }
       });

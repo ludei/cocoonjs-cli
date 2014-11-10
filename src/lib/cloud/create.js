@@ -78,7 +78,7 @@ function Create(Cloud, manager) {
         }
 
         var customArgv = ["create", commandList.path, commandList.package, commandList.name];
-        var copyFrom = CliManager.getArgv()['copy-from'];
+        var copyFrom = CliManager.getArgv(CliManager.ARGV.RAW)['copy-from'];
         if(copyFrom){
             customArgv.push("--copy-from=" + copyFrom);
         }

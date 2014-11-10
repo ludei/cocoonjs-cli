@@ -11,7 +11,7 @@ function Clone(Cloud, manager) {
     CliManager = manager;
 
     this._cmd = CliManager.getCMD();
-    this._CliManager = CliManager;
+
     var me = this;
     var credentials = Cloud.loadCredentials();
 
@@ -31,8 +31,8 @@ function Clone(Cloud, manager) {
         throw new Error("Cannot find 'cocoonjs create' library."); // This should never happen lol wut
     }
 
-    var package = CliManager.getArgv( CliManager.ARGV.RAW )[2];
-    if (!package){
+    var bundle = CliManager.getArgv( CliManager.ARGV.RAW )[2];
+    if (!bundle){
         throw new Error("Missing argument package.");
     }
 
@@ -46,7 +46,7 @@ function Clone(Cloud, manager) {
      * so AppLib can use the correct project info.
      */
     CliManager.toogleCustomArgv(true);
-    CliManager.setCustomArgv(["apps", package]);
+    CliManager.setCustomArgv(["apps", bundle]);
     new AppLib(Cloud, CliManager, function(projectInfo){
 
         CliManager.toogleCustomArgv(false);
@@ -62,13 +62,13 @@ Clone.prototype.setUpLocalProject = function(CreateLib, projectInfo, path){
     }
 
     this.createLocalProject(CreateLib, projectInfo, path);
-}
+};
 
 Clone.prototype.createLocalProject = function(CreateLib, projectInfo, path){
 
     var customArgv = ["create", path, projectInfo.package, '"' + projectInfo.title + '"'];
     var me = this;
-    var copyFrom = CliManager.getArgv()['copy-from'];
+    var copyFrom = CliManager.getArgv(CliManager.ARGV.RAW)['copy-from'];
     if(copyFrom){
         customArgv.push("--copy-from=" + copyFrom);
     }
@@ -76,7 +76,7 @@ Clone.prototype.createLocalProject = function(CreateLib, projectInfo, path){
     CliManager.setCustomArgv(customArgv);
     CliManager.toogleCustomArgv(true);
 
-    new CreateLib(CliManager, function(stdout, stderr, status){
+    new CreateLib(CliManager, function(stdout, stderr){
 
         CliManager.toogleCustomArgv(false);
 
@@ -86,14 +86,13 @@ Clone.prototype.createLocalProject = function(CreateLib, projectInfo, path){
 
         me.updateProjectSettings(projectInfo, path);
     });
-}
+};
 
 Clone.prototype.updateProjectSettings = function (projectInfo, path) {
 
-    var me  = this;
     var configManager = new ConfigManager();
 
-    configManager.readConfigXML(path , function(err, configAsObj, configAsXML){
+    configManager.readConfigXML(path , function(err){
         if(err){
             throw new Error(err);
         }
@@ -105,6 +104,6 @@ Clone.prototype.updateProjectSettings = function (projectInfo, path) {
         util.log("Project configuration '" + projectInfo.title + "' cloned correctly into " + path);
 
     });
-}
+};
 
 module.exports = Clone;

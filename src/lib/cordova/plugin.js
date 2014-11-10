@@ -292,7 +292,6 @@ CordovaPlugin.prototype.getHooksPath = function(){
 	possible_path = path.join(project_path,"hooks");
 	if( fileExists( possible_path ) ) return possible_path;
 
-	return;
 };
 
 CordovaPlugin.prototype.executeHook = function(plugin_path, hook_path){
