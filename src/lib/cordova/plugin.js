@@ -40,12 +40,30 @@ CordovaPlugin.prototype.init = function(){
 	*/
 	var ludei_plugin = this.isLudeiPlugin();
 	if(this._commands_list[1] === "add" && ludei_plugin){
-		if( ludei_plugin.plugin_id === this._commands_list[2] ) this.installWebViewPlus(ludei_plugin);
+		if( ludei_plugin.plugin_id === this._commands_list[2] ){
+			if( ludei_plugin.plugin_id === "com.ludei.ios.webview.plus" ){
+				this.installWebViewPlusIos(ludei_plugin);
+			}else{
+				this.installWebViewPlus(ludei_plugin);
+			}
+		}
 	}else if(this._commands_list[1] === "rm" && ludei_plugin){
 		if( ludei_plugin.plugin_id === this._commands_list[2] ) this.removeWebViewPlus(ludei_plugin);
 	}else{
 		this.executePluginCommand();
 	}
+};
+
+CordovaPlugin.prototype.installWebViewPlusIos = function(plugin){
+
+	util.log("Installing Webview+ for iOs in your CocoonJS Project.");
+	var plugin_result 	= this._cmd.exec("plugin add " + plugin.bundle_id);
+	if(plugin_result.code !== 0) {
+		util.errorLog("Cannot install the WebView+ in your project, failed to execute the command `cocoonjs plugin add " + plugin.bundle_id + "`. ");
+		console.error(plugin_result.output);
+		process.exit(plugin_result.code);
+	}
+
 };
 
 CordovaPlugin.prototype.isLudeiPlugin = function(){
