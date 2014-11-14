@@ -5,9 +5,13 @@ var colors  = require('colors'),
     xml2js  = require('xml2js');
 
 var fileExists = fs.existsSync;
-
+// wtf javascript you are drunked
+String.prototype.replaceAll = function (find, replace) {
+    var str = this;
+    return str.replace(new RegExp(find.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'g'), replace);
+};
 (function(){
-    
+
     /**
      * The "exported" object, this object holds all the "utils" functionalities
      */

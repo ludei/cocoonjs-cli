@@ -7,7 +7,7 @@ var fileExists = fs.existsSync;
 function CordovaPlugin(CliManager) {
 
     var cmd     = CliManager.getCMD();
-    var command = CliManager.getArgv(CliManager.ARGV.AS_STRING);
+    var command = CliManager.getArgv( CliManager.ARGV.AS_STRING );
     this._argv  = CliManager.getArgv( CliManager.ARGV.RAW );
 	
 	util.log("Executing command '" + command + "'");
@@ -42,27 +42,63 @@ CordovaPlugin.prototype.init = function(){
 	if(this._commands_list[1] === "add" && ludei_plugin){
 		if( ludei_plugin.plugin_id === this._commands_list[2] ){
 			if( ludei_plugin.plugin_id === "com.ludei.ios.webview.plus" ){
-				this.installWebViewPlusIos(ludei_plugin);
+				this.installLudeiPlugin(ludei_plugin);
 			}else{
 				this.installWebViewPlus(ludei_plugin);
 			}
 		}
 	}else if(this._commands_list[1] === "rm" && ludei_plugin){
-		if( ludei_plugin.plugin_id === this._commands_list[2] ) this.removeWebViewPlus(ludei_plugin);
+		if( ludei_plugin.plugin_id === this._commands_list[2] ) {
+            if( ludei_plugin.plugin_id === "com.ludei.ios.webview.plus" ){
+                this.uninstallLudeiPlugin(ludei_plugin);
+            }else{
+                this.removeWebViewPlus(ludei_plugin);
+            }
+        }
 	}else{
 		this.executePluginCommand();
 	}
 };
 
-CordovaPlugin.prototype.installWebViewPlusIos = function(plugin){
+CordovaPlugin.prototype.installLudeiPlugin = function(plugin){
+    util.log("Installing '" + plugin.bundle_id + "' in your CocoonJS Project.");
+    var plugin_result 	= this._cmd.exec("plugin add " + plugin.bundle_id);
+    if(plugin_result.code !== 0) {
+        util.errorLog("Cannot install the WebView+ in your project, failed to execute the command `cocoonjs plugin add " + plugin.bundle_id + "`. ");
+        console.error(plugin_result.output);
+        process.exit(plugin_result.code);
+    }
 
-	util.log("Installing Webview+ for iOs in your CocoonJS Project.");
-	var plugin_result 	= this._cmd.exec("plugin add " + plugin.bundle_id);
-	if(plugin_result.code !== 0) {
-		util.errorLog("Cannot install the WebView+ in your project, failed to execute the command `cocoonjs plugin add " + plugin.bundle_id + "`. ");
-		console.error(plugin_result.output);
-		process.exit(plugin_result.code);
-	}
+    var project_path = process.cwd();
+    var project_plugins_path = path.join( project_path, "plugins");
+    var plugin_path = path.join( project_plugins_path, plugin.plugin_id);
+    var hook_path = path.join( plugin_path, "ios", "hooks", "install.js");
+
+    if( fs.existsSync(hook_path) ){
+        var CustomHook = require(hook_path);
+        new CustomHook(project_path);
+    }
+};
+
+CordovaPlugin.prototype.uninstallLudeiPlugin = function(plugin){
+    util.log("Uninstalling '" + plugin.bundle_id + "'");
+
+    var project_path = process.cwd();
+    var project_plugins_path = path.join( project_path, "plugins");
+    var plugin_path = path.join( project_plugins_path, plugin.plugin_id);
+    var hook_path = path.join( plugin_path, "ios", "hooks", "uninstall.js");
+
+    if( fs.existsSync(hook_path) ){
+        var CustomHook = require(hook_path);
+        new CustomHook(project_path);
+    }
+
+    var plugin_result 	= this._cmd.exec("plugin rm " + plugin.plugin_id);
+    if(plugin_result.code !== 0) {
+        util.errorLog("Cannot uninstall the WebView+, failed to execute the command `cocoonjs plugin rm " + plugin.bundle_id + "`. ");
+        console.error(plugin_result.output);
+        process.exit(plugin_result.code);
+    }
 
 };
 
@@ -98,9 +134,9 @@ CordovaPlugin.prototype.executePluginCommand = function(){
 };
 
 CordovaPlugin.prototype.WebViewPlusReq = function(){
-	var result = null;
+	var result = "";
 	var options = { avoidCordovaCMD : true, silent : true };
-	var command = null;
+	var command = "";
 
 	command = (util.inWindows) ? "android --help" : "which android";
 	result 	= this._cmd.exec(command, options);
@@ -241,7 +277,7 @@ CordovaPlugin.prototype.installWebViewPlus = function(plugin){
 		if(hook_info.folder === "after_plugin_add"){
 			hook_path = hook_info.full_path;
 		}
-	};
+	}
 
 	if(!hook_path){
 		util.errorLog("Cannot find a valid Webview+ hook to be executed.");
@@ -255,7 +291,7 @@ CordovaPlugin.prototype.installWebViewPlus = function(plugin){
 		this._cmd.exec("plugin rm " + plugin_id);
 		console.error(installation_result.output);
 		return false;
-	};
+	}
 
 	util.log("The Webview+ has been installed correctly in your Cordova project :)");
 	process.exit(0);
