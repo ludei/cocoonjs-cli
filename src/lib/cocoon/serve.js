@@ -43,12 +43,21 @@ function LiveReload(cmd, command, argv) {
 LiveReload.prototype.serveCordovaLibrary = function(res, platform){
     var cordova_lib_path    = path.join(process.cwd() , "platforms", platform, "platform_www", "cordova.js");
     var cordova_lib_content = fs.readFileSync( cordova_lib_path , 'utf-8');
+    res.setHeader('Content-Type', 'application/javascript');
     res.end( cordova_lib_content );
+}
+
+LiveReload.prototype.serveCocoonLibrary = function(res){
+    var cocoon_lib_path    = path.join(__dirname , "cocoon.js");
+    var cocoon_lib_content = fs.readFileSync( cocoon_lib_path , 'utf-8');
+    res.setHeader('Content-Type', 'application/javascript');
+    res.end( cocoon_lib_content );
 }
 
 LiveReload.prototype.serveCordovaPlugins = function(res, platform){
     var cordova_plugin_path    = path.join(process.cwd() , "platforms", platform, this.getCordovaPluginsPath(platform), "cordova_plugins.js");
     var cordova_plugin_content = fs.readFileSync( cordova_plugin_path , 'utf-8');
+    res.setHeader('Content-Type', 'application/javascript');
     res.end( cordova_plugin_content );
 }
 
@@ -96,6 +105,11 @@ LiveReload.prototype.middlewareCordovaLib = function(req, res, next){
 
     if(queryString[0] && queryString[0] === "cordova_plugins.js"){
         me.serveCordovaPlugins(res, platformId);
+        next();
+    }
+
+    if(queryString[0] && queryString[0] === "cocoon.js"){
+        me.serveCocoonLibrary(res);
         next();
     }
     

@@ -6,7 +6,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<style type="text/css">
 	#wrapper{
-		width: 600px;
+		max-width: 600px;
 		margin: 0px auto;
 	}
 	#head{
@@ -31,7 +31,8 @@
 
 	}
 	body{
-		font-family: 'Verdana'
+		font-family: 'Verdana';
+		background-color: #FFFFFF; 
 	}
 	a{
 		color: #1CC9C9;
@@ -66,6 +67,84 @@
 	</style>
 </head>
 <body>
+<script src="http://d3lp1msu2r81bx.cloudfront.net/kjs/js/lib/kinetic-v5.0.2.js"></script>
+<script src="cocoon.js"></script>
+
+<script type="text/javascript">
+	window.onload = function(){
+		//navigator.isCocoonJS = true;
+		//if(navigator.isCocoonJS){
+
+			document.body.innerHTML = '<div id="container"></div>';
+
+		    var stage = new Kinetic.Stage({
+    			container: 'container',
+			    width: 600,
+			    height: 500
+			});
+			var layer = new Kinetic.Layer();
+			var mY = 0; 
+
+	        var imageObj = new Image();
+	        imageObj.onload = function() {
+		        var logo = new Kinetic.Image({
+		         	x: 0,
+		        	y: 10,
+		        	image: imageObj,
+		        	width: 200,
+		        	height: 56
+		        });
+
+		        layer.add(logo);
+
+		        var canvas_heading_title = new Kinetic.Text({
+		          text: '{{canvas_heading_title}}',
+		          fontFamily: 'Verdana',
+		          fontSize: 24,
+		          y: 75,
+		          fill: '#c8c8c8',
+		          fontStyle: 'bold'
+		        }); 
+
+		        layer.add(canvas_heading_title);
+
+		        var canvas_project_info = new Kinetic.Text({
+		          text: 'Project information:',
+		          fontFamily: 'Verdana',
+		          fontSize: 18,
+		          y: 120,
+		          fill: '#c8c8c8',
+		          fontStyle: 'bold'
+		        });
+
+		        layer.add(canvas_project_info); 
+
+				{{canvas_project_info}}
+
+				mY = mY + 10; 
+
+				var canvas_platforms = new Kinetic.Text({
+		          text: 'Available platforms:',
+		          fontFamily: 'Verdana',
+		          fontSize: 18,
+		          y: mY,
+		          fill: '#c8c8c8',
+		          fontStyle: 'bold'
+		        }); 
+
+				mY = mY + 40; 
+
+		        layer.add(canvas_platforms); 
+
+				{{canvas_platforms}}
+
+		        stage.add(layer);
+	        };
+	        
+	    	imageObj.src = 'https://d1315078ftetqc.cloudfront.net/assets/img/layout/logo.png';
+	    //}
+	}
+</script>
 <div id="wrapper">
 	<header id="head">
 		<a href="http://www.ludei.com"><img src="https://d1315078ftetqc.cloudfront.net/assets/img/layout/logo.png" class="logo" /></a>
