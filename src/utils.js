@@ -5,9 +5,13 @@ var colors  = require('colors'),
     xml2js  = require('xml2js');
 
 var fileExists = fs.existsSync;
-
+// wtf javascript you are drunked
+String.prototype.replaceAll = function (find, replace) {
+    var str = this;
+    return str.replace(new RegExp(find.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'g'), replace);
+};
 (function(){
-    
+
     /**
      * The "exported" object, this object holds all the "utils" functionalities
      */
@@ -19,7 +23,7 @@ var fileExists = fs.existsSync;
     utils.OPERATING_SYSTEM  = os.type();
     utils.inWindows         = (os.platform() === 'win32');
     utils.TAG               = ("[" + ("CocoonJS") + "] ").cyan;
-    utils.TAG_ERROR         = ("[" + ("CocoonJS") + "] ").cyan;
+    utils.TAG_ERROR         = ("[" + ("CocoonJS") + "] ").yellow;
 
     /**
      * Creates a valid path depending on the platform
@@ -48,19 +52,20 @@ var fileExists = fs.existsSync;
         var project_path    = process.cwd();
         var config_path     = path.join(project_path, "config.xml");
         var parser          = new xml2js.Parser();
+        var data;
 
         if( fileExists(config_path) ){
-            var data = fs.readFileSync(config_path).toString('UTF-8');
+            data = fs.readFileSync(config_path).toString('UTF-8');
             parser.parseString(data, callback);
             return;
-        };
+        }
 
         config_path = path.join(project_path, "www","config.xml");
         if( fileExists(config_path) ){
-            var data = fs.readFileSync(config_path).toString('UTF-8');
+            data = fs.readFileSync(config_path).toString('UTF-8');
             parser.parseString(data, callback);
             return;
-        };
+        }
 
         return callback(false);
     };
@@ -69,7 +74,7 @@ var fileExists = fs.existsSync;
      * Checks if this platform ready to manage cordova compilations, also returns
      * the cordova version.
      */
-    utils.getCordovaVersion = function(cmd, callback){
+    utils.getCordovaVersion = function(cmd){
         var isAvailable = utils.isCordovaAvailable(cmd);
         if(isAvailable){
             return isAvailable.output.replace(/(\r\n|\n|\r)/gm,"");
@@ -77,28 +82,38 @@ var fileExists = fs.existsSync;
             return false;
         }
     };
-
-    utils.printHelpInfo = function(){
-        var help = path.join(__dirname, "../", "help.txt")
+    /**
+     * Prints a help file.
+     * @param filename
+     * @returns {*}
+     */
+    utils.printHelpInfo = function(filename){
+        var help = path.join(__dirname, "/help", (filename) ? filename : "help.txt" );
         return console.log( fs.readFileSync( help ).toString() );
     };
 
+    /**
+     * Basic extends functionality for JS
+     * @returns {*}
+     */
     utils.extend = function(){
         for(var i=1; i<arguments.length; i++)
                 for(var key in arguments[i])
                     if(arguments[i].hasOwnProperty(key))
                         arguments[0][key] = arguments[i][key];
         return arguments[0];
-    }
+    };
 
     /**
-     * Utility log function, TODO: handle verbosity
+     * Utility log function
+     * TODO: handle verbosity
      */
     utils.log = function(){
         var args = Array.prototype.slice.call(arguments).join(" ");
         if(args.length > 0 && new RegExp(/\\n/).test(JSON.stringify(args[args.length - 1]))){
             args = args.substring(0, args.length - 1);
         }
+        args = args.replace('`cordova','`cocoonjs');
         console.log(utils.TAG + args);
     };
 
@@ -114,7 +129,7 @@ var fileExists = fs.existsSync;
                     platforms.push(dir_content[i]);
                     platforms[dir_content[i]] = true;
                 }
-            };
+            }
         }
 
         return platforms;
@@ -134,29 +149,34 @@ var fileExists = fs.existsSync;
         }
 
         return path;
-    }
+    };
 
     utils.errorLog = function(){
         var args = Array.prototype.slice.call(arguments).join(" ");
         if(args.length > 0 && new RegExp(/\\n/).test(JSON.stringify(args[args.length - 1]))){
             args = args.substring(0, args.length - 1);
         }
+        args = args.replace('`cordova','`cocoonjs');
         console.error(utils.TAG_ERROR + (args.red));
     };
 
     utils.cleanUpArguments = function(CMD_ARGS){
         for (var i = 0; i < CMD_ARGS.length; i++){
-        if(CMD_ARGS[i].indexOf("--cordova-path") !== -1) {
-            CMD_ARGS.splice(i, 1);
-            continue;
+            if(CMD_ARGS[i].indexOf("--cordova-path") !== -1) {
+                CMD_ARGS.splice(i, 1);
+                continue;
+            }
+            if(CMD_ARGS[i].indexOf("--plugins-path") !== -1) {
+                CMD_ARGS.splice(i, 1);
+                continue;
+            }
+            if(CMD_ARGS[i] === "cloud") {
+                CMD_ARGS.splice(i, 1);
+                // continue; is unnecessary as the last statement in a loop
+            }
         }
-        if(CMD_ARGS[i].indexOf("--plugins-path") !== -1) {
-            CMD_ARGS.splice(i, 1);
-            continue;
-        }
-    }
-    return CMD_ARGS;
-    }
+        return CMD_ARGS;
+    };
 
     module.exports = utils;
 })();

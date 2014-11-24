@@ -4,14 +4,19 @@ var shell 	= require('shelljs'),
 	util 	= require('../../utils.js');
 var fileExists = fs.existsSync;
 
-function CordovaPlugin(cmd, command, argv) {
+function CordovaPlugin(CliManager) {
+
+    var cmd     = CliManager.getCMD();
+    var command = CliManager.getArgv( CliManager.ARGV.AS_STRING );
+    this._argv  = CliManager.getArgv( CliManager.ARGV.RAW );
+	
 	util.log("Executing command '" + command + "'");
 
 	var ctx = this;
 	this._commands = command;
 	this._commands_list = command.split(" ");
 	this._cmd = cmd;
-	this._argv = argv;
+
 	this._config_xml = {};
 	this.ludei_plugins = [];
 	util.getConfigXML(function(err, data){
@@ -22,7 +27,7 @@ function CordovaPlugin(cmd, command, argv) {
 		ctx._config_xml = data;
 		ctx.init();
 	});
-};
+}
 
 CordovaPlugin.prototype.init = function(){
 
@@ -35,12 +40,66 @@ CordovaPlugin.prototype.init = function(){
 	*/
 	var ludei_plugin = this.isLudeiPlugin();
 	if(this._commands_list[1] === "add" && ludei_plugin){
-		if( ludei_plugin.plugin_id === this._commands_list[2] ) this.installWebViewPlus(ludei_plugin);
+		if( ludei_plugin.plugin_id === this._commands_list[2] ){
+			if( ludei_plugin.plugin_id === "com.ludei.ios.webview.plus" ){
+				this.installLudeiPlugin(ludei_plugin);
+			}else{
+				this.installWebViewPlus(ludei_plugin);
+			}
+		}
 	}else if(this._commands_list[1] === "rm" && ludei_plugin){
-		if( ludei_plugin.plugin_id === this._commands_list[2] ) this.removeWebViewPlus(ludei_plugin);
+		if( ludei_plugin.plugin_id === this._commands_list[2] ) {
+            if( ludei_plugin.plugin_id === "com.ludei.ios.webview.plus" ){
+                this.uninstallLudeiPlugin(ludei_plugin);
+            }else{
+                this.removeWebViewPlus(ludei_plugin);
+            }
+        }
 	}else{
 		this.executePluginCommand();
 	}
+};
+
+CordovaPlugin.prototype.installLudeiPlugin = function(plugin){
+    util.log("Installing '" + plugin.bundle_id + "' in your CocoonJS Project.");
+    var plugin_result 	= this._cmd.exec("plugin add " + plugin.bundle_id);
+    if(plugin_result.code !== 0) {
+        util.errorLog("Cannot install the WebView+ in your project, failed to execute the command `cocoonjs plugin add " + plugin.bundle_id + "`. ");
+        console.error(plugin_result.output);
+        process.exit(plugin_result.code);
+    }
+
+    var project_path = process.cwd();
+    var project_plugins_path = path.join( project_path, "plugins");
+    var plugin_path = path.join( project_plugins_path, plugin.plugin_id);
+    var hook_path = path.join( plugin_path, "ios", "hooks", "install.js");
+
+    if( fs.existsSync(hook_path) ){
+        var CustomHook = require(hook_path);
+        new CustomHook(project_path);
+    }
+};
+
+CordovaPlugin.prototype.uninstallLudeiPlugin = function(plugin){
+    util.log("Uninstalling '" + plugin.bundle_id + "'");
+
+    var project_path = process.cwd();
+    var project_plugins_path = path.join( project_path, "plugins");
+    var plugin_path = path.join( project_plugins_path, plugin.plugin_id);
+    var hook_path = path.join( plugin_path, "ios", "hooks", "uninstall.js");
+
+    if( fs.existsSync(hook_path) ){
+        var CustomHook = require(hook_path);
+        new CustomHook(project_path);
+    }
+
+    var plugin_result 	= this._cmd.exec("plugin rm " + plugin.plugin_id);
+    if(plugin_result.code !== 0) {
+        util.errorLog("Cannot uninstall the WebView+, failed to execute the command `cocoonjs plugin rm " + plugin.bundle_id + "`. ");
+        console.error(plugin_result.output);
+        process.exit(plugin_result.code);
+    }
+
 };
 
 CordovaPlugin.prototype.isLudeiPlugin = function(){
@@ -51,7 +110,7 @@ CordovaPlugin.prototype.isLudeiPlugin = function(){
 	
 	for (var i = 0; i < ludei_plugins.length; i++) {
 		if(bundle_id === ludei_plugins[i].plugin_id) return ludei_plugins[i];
-	};
+	}
 
 	return false;
 };
@@ -59,7 +118,6 @@ CordovaPlugin.prototype.isLudeiPlugin = function(){
 CordovaPlugin.prototype.getLudeiPlugins = function(){
 	var plugins_info_path = path.join(__dirname, "../", "../", "ludei_plugins.json");
 	if(fs.existsSync(plugins_info_path)) return require(plugins_info_path).plugins;
-
 	return false;
 };
 
@@ -75,10 +133,10 @@ CordovaPlugin.prototype.executePluginCommand = function(){
 	}
 };
 
-CordovaPlugin.prototype.WebViewPlusReq = function(webview_plus_path){
-	var result = null;
+CordovaPlugin.prototype.WebViewPlusReq = function(){
+	var result = "";
 	var options = { avoidCordovaCMD : true, silent : true };
-	var command = null;
+	var command = "";
 
 	command = (util.inWindows) ? "android --help" : "which android";
 	result 	= this._cmd.exec(command, options);
@@ -140,14 +198,14 @@ CordovaPlugin.prototype.removeWebViewPlus = function(plugin){
 		util.errorLog("Error executing Webview+ hook", hook_path);
 		console.error(exec_result.output);
 		return false;
-	};
+	}
 
 	var plugin_result = this._cmd.exec("plugin rm " + plugin_id);
 	if(plugin_result.code !== 0){
 		util.errorLog("Cannot uninstall the Webview+, failed to execute the command `cocoonjs plugin rm " + plugin_id + "`.");
 		util.errorLog(plugin_result.output);
 		process.exit(plugin_result.code);
-	};
+	}
 
 	try{
 		fs.unlinkSync(hook_path);
@@ -219,7 +277,7 @@ CordovaPlugin.prototype.installWebViewPlus = function(plugin){
 		if(hook_info.folder === "after_plugin_add"){
 			hook_path = hook_info.full_path;
 		}
-	};
+	}
 
 	if(!hook_path){
 		util.errorLog("Cannot find a valid Webview+ hook to be executed.");
@@ -233,7 +291,7 @@ CordovaPlugin.prototype.installWebViewPlus = function(plugin){
 		this._cmd.exec("plugin rm " + plugin_id);
 		console.error(installation_result.output);
 		return false;
-	};
+	}
 
 	util.log("The Webview+ has been installed correctly in your Cordova project :)");
 	process.exit(0);
@@ -267,7 +325,7 @@ CordovaPlugin.prototype.installHooks = function(hooks_path){
 					fs.renameSync( path.join(full_path, js_file) ,  hook_dest);
 					shell.chmod("+x", hook_dest);
 				}
-			};
+			}
 		}
 	}
 
@@ -288,7 +346,6 @@ CordovaPlugin.prototype.getHooksPath = function(){
 	possible_path = path.join(project_path,"hooks");
 	if( fileExists( possible_path ) ) return possible_path;
 
-	return;
 };
 
 CordovaPlugin.prototype.executeHook = function(plugin_path, hook_path){

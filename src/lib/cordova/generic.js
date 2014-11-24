@@ -1,7 +1,11 @@
 var shell 	= require('shelljs'),
 	util 	= require('../../utils.js');
 
-function GenericCommand(cmd, command) {
+function GenericCommand(CliManager) {
+
+    var command = CliManager.getArgv(CliManager.ARGV.AS_STRING);
+    var cmd = CliManager.getCMD();
+
 	util.log("Executing command '" + command + "'");
 
 	cmd.execAsync(command, {

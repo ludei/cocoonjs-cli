@@ -5,7 +5,6 @@ var shell 	= require('shelljs'),
     gulp    = require('gulp'),
     gulp_connect = require(path.resolve(__dirname,"livereload","connect-index.js")),
     ip  = require('ip'),
-    url = require('url'),
     qrcode = require('qrcode-terminal'),
     me = this,
     root = path.join(process.cwd() , "www"),
@@ -13,16 +12,21 @@ var shell 	= require('shelljs'),
     mime = require('mime'),
     config_xml;
 
-function LiveReload(cmd, command, argv) {
+var CliManager;
+function LiveReload(manager) {
+    CliManager = manager;
+
+    var command = CliManager.getArgv( CliManager.ARGV.AS_STRING );
+
 	util.log("Executing command '" + command + "'");
 
-    this.cmd = cmd;
+    this.cmd = CliManager.getCMD();
 
     util.log("A 'cordova prepare' is needed before executing 'cordova serve'.");
     // Prepare the project before serving it.
     var prepare = this.cmd.exec("prepare", { silent : false });
     if(prepare.code !== 0){
-        util.errorLog("Error executing 'cordova prepare'.");
+        util.errorLog("Error executing 'cordova prepare'. " + prepare.output);
         process.exit(0);
     }
 
@@ -44,13 +48,13 @@ LiveReload.prototype.serveCordovaLibrary = function(res, platform){
     var cordova_lib_path    = path.join(process.cwd() , "platforms", platform, "platform_www", "cordova.js");
     var cordova_lib_content = fs.readFileSync( cordova_lib_path , 'utf-8');
     res.end( cordova_lib_content );
-}
+};
 
 LiveReload.prototype.serveCordovaPlugins = function(res, platform){
     var cordova_plugin_path    = path.join(process.cwd() , "platforms", platform, this.getCordovaPluginsPath(platform), "cordova_plugins.js");
     var cordova_plugin_content = fs.readFileSync( cordova_plugin_path , 'utf-8');
     res.end( cordova_plugin_content );
-}
+};
 
 LiveReload.prototype.getCordovaPluginsPath = function(platform){
     var plugins_path;
@@ -60,7 +64,7 @@ LiveReload.prototype.getCordovaPluginsPath = function(platform){
         plugins_path = "www";
     }
     return plugins_path;
-}
+};
 
 // Middleware for gulp, serves static files and injects livereload snippet in case of inde.html file
 LiveReload.prototype.middlewareCordovaLib = function(req, res, next){
@@ -118,8 +122,6 @@ LiveReload.prototype.middlewareCordovaLib = function(req, res, next){
             res.end( file );
         }
     }
-    return;
-
 };
 
 LiveReload.prototype.getMainHTML = function (platforms){
@@ -167,18 +169,28 @@ LiveReload.prototype.init = function(){
         silent : true,
         port : 8070,
         livereload: true,
-        middleware: function(connect, opt) {
+        middleware: function() {
             return [me.middlewareCordovaLib]
         }
       });
     });
 
-    gulp.task('html', function () {
-      gulp.src( path.join(root,'/*.html') ).pipe(gulp_connect.reload());
+    gulp.task('reload_html', function () {
+      gulp.src( path.join(root,'/**/*.html') ).pipe(gulp_connect.reload());
+    });
+
+    gulp.task('reload_styles', function () {
+      gulp.src( path.join(root,'/**/*.css') ).pipe(gulp_connect.reload());
+    });
+
+    gulp.task('reload_code', function () {
+      gulp.src( path.join(root,'/**/*.js') ).pipe(gulp_connect.reload());
     });
 
     gulp.task('watch', function () {
-      gulp.watch([ path.join(root,'/*.html') ], ['html']);
+      gulp.watch([ path.join(root,'/**/*.html') ], ['reload_html']);
+      gulp.watch([ path.join(root,'/**/*.css') ], ['reload_styles']);
+      gulp.watch([ path.join(root,'/**/*.js') ], ['reload_code']);
     });
 
     gulp.task('default', ['connect', 'watch']);
@@ -188,7 +200,7 @@ LiveReload.prototype.init = function(){
     util.log("Path: " + root);
     util.log("CTRL + C to shut down");
 
-    if(argv.qrcode) qrcode.generate(server_url);
+    if( CliManager.getArgv( CliManager.ARGV.RAW )['qrcode'] ) qrcode.generate(server_url);
 };
 
 module.exports = LiveReload;
