@@ -54,6 +54,13 @@ LiveReload.prototype.serveCocoonLibrary = function(res){
     res.end( cocoon_lib_content );
 }
 
+LiveReload.prototype.serveKineticLibrary = function(res){
+    var cocoon_lib_path    = path.join(__dirname , "kinetic.js");
+    var cocoon_lib_content = fs.readFileSync( cocoon_lib_path , 'utf-8');
+    res.setHeader('Content-Type', 'application/javascript');
+    res.end( cocoon_lib_content );
+}
+
 LiveReload.prototype.serveCordovaPlugins = function(res, platform){
     var cordova_plugin_path    = path.join(process.cwd() , "platforms", platform, this.getCordovaPluginsPath(platform), "cordova_plugins.js");
     var cordova_plugin_content = fs.readFileSync( cordova_plugin_path , 'utf-8');
@@ -100,6 +107,11 @@ LiveReload.prototype.middlewareCordovaLib = function(req, res, next){
     //Special files, served from specific directories.
     if(queryString[0] && queryString[0] === "cordova.js"){ 
         me.serveCordovaLibrary(res, platformId);
+        next();
+    }
+    
+    if(queryString[0] && queryString[0] === "kinetic.js"){ 
+        me.serveKineticLibrary(res);
         next();
     }
 
