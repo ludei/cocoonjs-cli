@@ -1,9 +1,13 @@
 # CocoonJS Command Line tools #
 
-The CocoonJS command line tools let you build Cordova-based applications that benefit of the performance [Webview+](http://support.ludei.com/hc/en-us/articles/201952993).The main goal of the CocoonJS CLI is to provide the Ludei services (like cloud project management) right in you terminal.
+The CocoonJS command line tools let you build Cordova-based applications that benefit of Ludei's services (like cloud project management) right in you terminal.
 
+The CocoonJS CLI also provide access to the Webview+ execution environment. The CocoonJS CLI handles the installation and usage of the webview+ plugin directly in your computer.
 
-> The Webview+ provide you a consistent rendering engine independently of the Android 4.x version, so your app/game will run using the same rendering engine, with the fastest javascript engine in the world (V8).
+> Ludei's WebView+ is a Chromium based solution for Android 4.0+ and the WKWebView for iOS 8.0+.
+
+- [Webview+ for iOs](https://github.com/ludei/webview-plus-ios)
+- [Webview+ for Android](https://github.com/ludei/webview-plus)
 
 ## Requirements ##
 Install cordova-cli 3.2 or higher (Cordova 3.5 is recommended). Please refer to [Cordova prerequisites](https://github.com/apache/cordova-cli#requirements) to set up your environment.
