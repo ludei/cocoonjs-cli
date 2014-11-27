@@ -35,12 +35,22 @@ CordovaPlugin.prototype.init = function(){
 		this.executePluginCommand();
 		return;
 	}
+
+    var plugin_id = this._commands_list[2];
+
+    // Is this a folder?, get the plugin id if so.
+    if( fs.existsSync(plugin_id) && fs.existsSync( path.join(plugin_id, "plugin.xml") ) ){
+        var plugin_info = fs.readFileSync( path.join(plugin_id, "plugin.xml"), "utf8");
+        plugin_id = plugin_info.match(/ id="(.*?)"/)[1];
+        delete plugin_info;
+    }
+
 	/**
 	* TODO: The following code should be compatible with any Ludei plugin.
 	*/
-	var ludei_plugin = this.isLudeiPlugin();
+	var ludei_plugin = this.isLudeiPlugin(plugin_id);
 	if(this._commands_list[1] === "add" && ludei_plugin){
-		if( ludei_plugin.plugin_id === this._commands_list[2] ){
+		if( ludei_plugin.plugin_id === plugin_id ){
 			if( ludei_plugin.plugin_id === "com.ludei.ios.webview.plus" ){
 				this.installLudeiPlugin(ludei_plugin);
 			}else{
@@ -48,7 +58,7 @@ CordovaPlugin.prototype.init = function(){
 			}
 		}
 	}else if(this._commands_list[1] === "rm" && ludei_plugin){
-		if( ludei_plugin.plugin_id === this._commands_list[2] ) {
+		if( ludei_plugin.plugin_id === plugin_id ) {
             if( ludei_plugin.plugin_id === "com.ludei.ios.webview.plus" ){
                 this.uninstallLudeiPlugin(ludei_plugin);
             }else{
@@ -76,7 +86,7 @@ CordovaPlugin.prototype.installLudeiPlugin = function(plugin){
 
     if( fs.existsSync(hook_path) ){
         var CustomHook = require(hook_path);
-        new CustomHook(project_path);
+        new CustomHook(project_path, this._cmd);
     }
 };
 
@@ -102,8 +112,8 @@ CordovaPlugin.prototype.uninstallLudeiPlugin = function(plugin){
 
 };
 
-CordovaPlugin.prototype.isLudeiPlugin = function(){
-	var bundle_id = this._commands_list[2];
+CordovaPlugin.prototype.isLudeiPlugin = function(plugin_id){
+	var bundle_id = plugin_id;
 	var ludei_plugins = this.getLudeiPlugins();
 	
 	if(!ludei_plugins) return false;
