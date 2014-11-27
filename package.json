@@ -1,6 +1,6 @@
 {
   "name": "cocoonjs",
-  "version": "1.0.0-0.7.0",
+  "version": "1.0.0-0.8.0",
   "preferGlobal": "true",
   "description": "CocoonJS command line tool",
   "main": "cli",
