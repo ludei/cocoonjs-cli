@@ -57,7 +57,7 @@ CordovaPlugin.prototype.init = function(){
 				this.installWebViewPlus(ludei_plugin);
 			}
 		}
-	}else if(this._commands_list[1] === "rm" && ludei_plugin){
+	}else if(this._commands_list[1] === "rm" || this._commands_list[1] === "remove" && ludei_plugin){
 		if( ludei_plugin.plugin_id === plugin_id ) {
             if( ludei_plugin.plugin_id === "com.ludei.ios.webview.plus" ){
                 this.uninstallLudeiPlugin(ludei_plugin);
