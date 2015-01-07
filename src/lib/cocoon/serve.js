@@ -60,7 +60,7 @@ LiveReload.prototype.getCordovaPluginsPath = function(platform){
     var plugins_path;
     if(platform === "android"){
         plugins_path = "assets/www";
-    }else if(platform === "ios"){
+    }else if(platform === "ios" || platform === "browser"){
         plugins_path = "www";
     }
     return plugins_path;
