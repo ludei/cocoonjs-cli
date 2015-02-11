@@ -53,21 +53,45 @@ CordovaPlugin.prototype.init = function(){
 		if( ludei_plugin.plugin_id === plugin_id ){
 			if( ludei_plugin.plugin_id === "com.ludei.ios.webview.plus" ){
 				this.installLudeiPlugin(ludei_plugin);
-			}else{
+			}else if (ludei_plugin.plugin_id === "com.ludei.webview.plus"){
 				this.installWebViewPlus(ludei_plugin);
+			}else if (ludei_plugin.plugin_id === "com.ludei.canvasplus.android"){
+				this.installCanvasPlus(ludei_plugin);
 			}
 		}
 	}else if(this._commands_list[1] === "rm" || this._commands_list[1] === "remove" && ludei_plugin){
 		if( ludei_plugin.plugin_id === plugin_id ) {
             if( ludei_plugin.plugin_id === "com.ludei.ios.webview.plus" ){
                 this.uninstallLudeiPlugin(ludei_plugin);
-            }else{
+            }else if (ludei_plugin.plugin_id === "com.ludei.webview.plus"){
                 this.removeWebViewPlus(ludei_plugin);
+            }else if (ludei_plugin.plugin_id === "com.ludei.cocoon.canvasplus.android"){
+            	this.installCanvasPlus(ludei_plugin);
             }
         }
 	}else{
 		this.executePluginCommand();
 	}
+};
+
+CordovaPlugin.prototype.installCanvasPlus = function(plugin){
+	// In case the project already has a canvas+ plugin, we remove it so we add our local version
+	util.log("Removing previous '" + plugin.bundle_id + "' in to install the local version.");
+	this._cmd.exec("plugin rm " + plugin.bundle_id);
+
+	util.log("Installing '" + plugin.bundle_id + "' in your CocoonJS Project.");
+	var plugin_path = path.join(process.env.PLUGINS_PATH, plugin.plugin_id);
+	if (!fileExists(plugin_path)) {
+		util.log("Cocoon plugins path does not exist, cannot install '" + plugin.bundle_id + "' plugin in your CocoonJS Project.");
+	}
+
+	var plugin_result = this._cmd.exec("plugin add " + plugin_path);
+
+	if(plugin_result.code !== 0) {
+        util.errorLog("Cannot install the plugin " + plugin.bundle_id + " in your project, failed to execute the command `cocoonjs plugin add " + plugin.bundle_id + "`. ");
+        console.error(plugin_result.output);
+        process.exit(plugin_result.code);
+    }
 };
 
 CordovaPlugin.prototype.installLudeiPlugin = function(plugin){

@@ -158,7 +158,7 @@ CliManager.prototype.getLudeiPlugins = function(){
     },{
         isView : true,
         name : "canvas+",
-        package : "com.ludei.canvas.plus"
+        package : "com.ludei.cocoonjs.canvasplus"
     }];
 };
 /**
