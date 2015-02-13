@@ -52,88 +52,22 @@ CordovaPlugin.prototype.init = function(){
 	if(this._commands_list[1] === "add" && ludei_plugin){
 		if( ludei_plugin.plugin_id === plugin_id ){
 			if( ludei_plugin.plugin_id === "com.ludei.ios.webview.plus" ){
-				this.installLudeiPlugin(ludei_plugin);
+				this.installiOSWebViewPlus(ludei_plugin);
 			}else if (ludei_plugin.plugin_id === "com.ludei.webview.plus"){
-				this.installWebViewPlus(ludei_plugin);
-			}else if (ludei_plugin.plugin_id === "com.ludei.canvasplus.android"){
-				this.installCanvasPlus(ludei_plugin);
+				this.installAndroidWebViewPlus(ludei_plugin);
 			}
 		}
 	}else if(this._commands_list[1] === "rm" || this._commands_list[1] === "remove" && ludei_plugin){
 		if( ludei_plugin.plugin_id === plugin_id ) {
             if( ludei_plugin.plugin_id === "com.ludei.ios.webview.plus" ){
-                this.uninstallLudeiPlugin(ludei_plugin);
+                this.uninstalliOSWebViewPlus(ludei_plugin);
             }else if (ludei_plugin.plugin_id === "com.ludei.webview.plus"){
-                this.removeWebViewPlus(ludei_plugin);
-            }else if (ludei_plugin.plugin_id === "com.ludei.cocoon.canvasplus.android"){
-            	this.installCanvasPlus(ludei_plugin);
+                this.removeAndroidWebViewPlus(ludei_plugin);
             }
         }
 	}else{
 		this.executePluginCommand();
 	}
-};
-
-CordovaPlugin.prototype.installCanvasPlus = function(plugin){
-	// In case the project already has a canvas+ plugin, we remove it so we add our local version
-	util.log("Removing previous '" + plugin.bundle_id + "' in to install the local version.");
-	this._cmd.exec("plugin rm " + plugin.bundle_id);
-
-	util.log("Installing '" + plugin.bundle_id + "' in your CocoonJS Project.");
-	var plugin_path = path.join(process.env.PLUGINS_PATH, plugin.plugin_id);
-	if (!fileExists(plugin_path)) {
-		util.log("Cocoon plugins path does not exist, cannot install '" + plugin.bundle_id + "' plugin in your CocoonJS Project.");
-	}
-
-	var plugin_result = this._cmd.exec("plugin add " + plugin_path);
-
-	if(plugin_result.code !== 0) {
-        util.errorLog("Cannot install the plugin " + plugin.bundle_id + " in your project, failed to execute the command `cocoonjs plugin add " + plugin.bundle_id + "`. ");
-        console.error(plugin_result.output);
-        process.exit(plugin_result.code);
-    }
-};
-
-CordovaPlugin.prototype.installLudeiPlugin = function(plugin){
-    util.log("Installing '" + plugin.bundle_id + "' in your CocoonJS Project.");
-    var plugin_result 	= this._cmd.exec("plugin add " + plugin.bundle_id);
-    if(plugin_result.code !== 0) {
-        util.errorLog("Cannot install the WebView+ in your project, failed to execute the command `cocoonjs plugin add " + plugin.bundle_id + "`. ");
-        console.error(plugin_result.output);
-        process.exit(plugin_result.code);
-    }
-
-    var project_path = process.cwd();
-    var project_plugins_path = path.join( project_path, "plugins");
-    var plugin_path = path.join( project_plugins_path, plugin.plugin_id);
-    var hook_path = path.join( plugin_path, "ios", "hooks", "install.js");
-
-    if( fs.existsSync(hook_path) ){
-        var CustomHook = require(hook_path);
-        new CustomHook(project_path, this._cmd);
-    }
-};
-
-CordovaPlugin.prototype.uninstallLudeiPlugin = function(plugin){
-    util.log("Uninstalling '" + plugin.bundle_id + "'");
-
-    var project_path = process.cwd();
-    var project_plugins_path = path.join( project_path, "plugins");
-    var plugin_path = path.join( project_plugins_path, plugin.plugin_id);
-    var hook_path = path.join( plugin_path, "ios", "hooks", "uninstall.js");
-
-    if( fs.existsSync(hook_path) ){
-        var CustomHook = require(hook_path);
-        new CustomHook(project_path);
-    }
-
-    var plugin_result 	= this._cmd.exec("plugin rm " + plugin.plugin_id);
-    if(plugin_result.code !== 0) {
-        util.errorLog("Cannot uninstall the WebView+, failed to execute the command `cocoonjs plugin rm " + plugin.bundle_id + "`. ");
-        console.error(plugin_result.output);
-        process.exit(plugin_result.code);
-    }
-
 };
 
 CordovaPlugin.prototype.isLudeiPlugin = function(plugin_id){
@@ -203,7 +137,49 @@ CordovaPlugin.prototype.WebViewPlusReq = function(){
 	return true;
 };
 
-CordovaPlugin.prototype.removeWebViewPlus = function(plugin){
+CordovaPlugin.prototype.installiOSWebViewPlus = function(plugin){
+    util.log("Installing '" + plugin.bundle_id + "' in your project.");
+    var plugin_result 	= this._cmd.exec("plugin add " + plugin.bundle_id);
+    if(plugin_result.code !== 0) {
+        util.errorLog("Cannot install " + plugin.bundle_id + ", failed to execute the command `cocoonjs plugin add " + plugin.bundle_id + "`. ");
+        console.error(plugin_result.output);
+        process.exit(plugin_result.code);
+    }
+
+    var project_path = process.cwd();
+    var project_plugins_path = path.join( project_path, "plugins");
+    var plugin_path = path.join( project_plugins_path, plugin.plugin_id);
+    var hook_path = path.join( plugin_path, "ios", "hooks", "install.js");
+
+    if( fs.existsSync(hook_path) ){
+        var CustomHook = require(hook_path);
+        new CustomHook(project_path, this._cmd);
+    }
+};
+
+CordovaPlugin.prototype.uninstalliOSWebViewPlus = function(plugin){
+    util.log("Uninstalling '" + plugin.bundle_id + "'");
+
+    var project_path = process.cwd();
+    var project_plugins_path = path.join( project_path, "plugins");
+    var plugin_path = path.join( project_plugins_path, plugin.plugin_id);
+    var hook_path = path.join( plugin_path, "ios", "hooks", "uninstall.js");
+
+    if( fs.existsSync(hook_path) ){
+        var CustomHook = require(hook_path);
+        new CustomHook(project_path);
+    }
+
+    var plugin_result 	= this._cmd.exec("plugin rm " + plugin.plugin_id);
+    if(plugin_result.code !== 0) {
+        util.errorLog("Cannot uninstall " + plugin.bundle_id + ", failed to execute the command `cocoonjs plugin rm " + plugin.bundle_id + "`. ");
+        console.error(plugin_result.output);
+        process.exit(plugin_result.code);
+    }
+
+};
+
+CordovaPlugin.prototype.removeAndroidWebViewPlus = function(plugin){
 
 	var plugin_id = plugin.plugin_id;
 	var plugin_path = path.join(process.cwd(), "plugins", plugin_id, "android");
@@ -254,7 +230,7 @@ CordovaPlugin.prototype.removeWebViewPlus = function(plugin){
 	process.exit(exec_result.code);
 };
 
-CordovaPlugin.prototype.installWebViewPlus = function(plugin){
+CordovaPlugin.prototype.installAndroidWebViewPlus = function(plugin){
 
 	util.log("Installing Webview+ in your Cordova Project.");
 
