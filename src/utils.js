@@ -22,8 +22,8 @@ String.prototype.replaceAll = function (find, replace) {
      */
     utils.OPERATING_SYSTEM  = os.type();
     utils.inWindows         = (os.platform() === 'win32');
-    utils.TAG               = ("[" + ("CocoonJS") + "] ").cyan;
-    utils.TAG_ERROR         = ("[" + ("CocoonJS") + "] ").yellow;
+    utils.TAG               = ("[" + ("Cocoon") + "] ").cyan;
+    utils.TAG_ERROR         = ("[" + ("Cocoon") + "] ").yellow;
 
     /**
      * Creates a valid path depending on the platform
