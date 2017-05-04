@@ -1,3 +1,6 @@
+# IMPORTANT: This project has been discontinued. Please go to the new Cocoon Cloud at http://cocoon.io. 
+The new Cocoon cloud is completely Cordova based and has enhanced features that include: the most up to date Webview+, new Cocoon plugins, a better Developer App, support for any Cordova plugin and a revamped UI.
+
 # CocoonJS Command Line tools #
 
 The CocoonJS command line tools let you build Cordova-based applications that benefit of Ludei's services (like cloud project management) right in you terminal.
